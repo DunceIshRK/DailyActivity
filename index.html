@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>DS Daily Activity Tracking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; }
+        body { font-family: -apple-system, system-ui, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
+        
+        /* Navigation Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
+        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2); }
+
+        .tab-content { display: none; max-width: 100%; margin: auto; }
+        .tab-content.active { display: block; }
+
+        /* Form Styling */
+        .section-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        h3 { margin: 0 0 15px 0; color: var(--primary); font-size: 1.1rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+        label { display: block; margin-top: 12px; font-weight: 600; font-size: 0.85rem; color: #64748b; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        button#submitBtn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 1rem; cursor: pointer; }
+
+        /* Unified Landscape Dashboard Styling */
+        .export-btn { width: 100%; padding: 15px; background: var(--whatsapp); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
+        
+        #capture-area { padding: 20px; background: white; border-radius: 15px; width: fit-content; }
+        .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; background: white; border-radius: 12px; border: 1px solid #e2e8f0; }
+        
+        table { border-collapse: collapse; font-size: 11px; min-width: 1500px; } /* Ensures all columns stay in one row */
+        th { background: #f8fafc; padding: 12px 10px; text-align: left; border-bottom: 2px solid #e2e8f0; white-space: nowrap; border-right: 1px solid #e2e8f0; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; border-right: 1px solid #f1f5f9; }
+        
+        /* Sticky Store Column for easy mobile viewing */
+        td:first-child, th:first-child { position: sticky; left: 0; background: white; z-index: 2; font-weight: bold; border-right: 2px solid #e2e8f0; }
+        th:first-child { background: #f8fafc; z-index: 3; }
+
+        .badge { padding: 4px 8px; border-radius: 6px; font-weight: bold; font-size: 10px; display: inline-block; }
+        .bg-done { background: #dcfce7; color: var(--success); }
+        .bg-pending { background: #fee2e2; color: var(--danger); }
+        .badge-id { background: #eff6ff; color: var(--primary); font-family: monospace; border: 1px solid #dbeafe; }
+    </style>
+</head>
+<body>
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="showTab('form')">DATA ENTRY</button>
+    <button class="tab-btn" onclick="showTab('db')">DASHBOARD</button>
+</div>
+
+<div id="form" class="tab-content active">
+    <form id="storeForm">
+        <div class="section-card">
+            <h3>Select Store</h3>
+            <select name="store" required>
+                <option value="">-- Choose Store --</option>
+                <option>TM6N</option><option>TM4T</option><option>TM6M</option><option>T9W3</option>
+                <option>T9T3</option><option>T9V5</option><option>T3GC</option><option>TM6O</option>
+                <option>T9T7</option><option>TM4Z</option><option>TM3J</option><option>TM5C</option>
+                <option>TN1B</option><option>TK5T</option><option>TN1T</option><option>T9H8</option>
+                <option>TM8T</option><option>TN1C</option><option>TBAE</option><option>TL1U</option>
+            </select>
+        </div>
+
+        <div class="section-card">
+            <h3>SLA</h3>
+            <label>RMS</label><select name="rms"><option value="">Pending</option><option>Done</option></select>
+            <label>Reattempt Clearance</label><select name="reattempt"><option value="">Pending</option><option>Done</option></select>
+            <label>CN Clearance</label><select name="cnClearance"><option value="">Pending</option><option>Done</option></select>
+            <label>JM Order Clearance</label><select name="jmOrder"><option value="">Pending</option><option>Done</option></select>
+        </div>
+
+        <div class="section-card">
+            <h3>Operations</h3>
+            <label>AI Count Correction (ID)</label><input type="text" name="aiCount">
+            <label>JM Count Correction (ID)</label><input type="text" name="jmCount">
+            <label>Articles List (ID)</label><input type="text" name="articles">
+            <label>OSA Morning</label><select name="osaMorning"><option value="">Pending</option><option>Done</option></select>
+            <label>F&V Dump (ID)</label><input type="text" name="fvDump">
+            <label>Non F&V Dump (ID)</label><input type="text" name="nonFvDump">
+            <label>PIS (ID)</label><input type="text" name="pis">
+            <label>BOC Login</label><select name="bocLogin"><option value="">Pending</option><option>Done</option></select>
+            <label>OSA Evening</label><select name="osaEvening"><option value="">Pending</option><option>Done</option></select>
+            <label>EMS Portal</label><select name="emsPortal"><option value="">Pending</option><option>Done</option></select>
+            <label>Pending GRN</label><input type="text" name="pendingGrn">
+            <label>Self Help</label><select name="selfHelp"><option value="">Pending</option><option>Done</option></select>
+            <label>Near Expiry Check</label><select name="nearExpiry"><option value="">Pending</option><option>Done</option></select>
+            <label>Cash Reco</label><select name="cashReco"><option value="">Pending</option><option>Done</option></select>
+            
+            <div id="fvPiContainer" style="display:none;">
+                <label style="color:var(--danger)">F&V PI (Tuesday Only)</label>
+                <input type="text" name="fvPi">
+            </div>
+        </div>
+        <button type="submit" id="submitBtn">SUBMIT ALL ACTIVITIES</button>
+    </form>
+</div>
+
+<div id="db" class="tab-content">
+    <button class="export-btn" onclick="exportLandscapeReport()">📸 Export Full Landscape Report (PNG)</button>
+    
+    <div class="table-wrapper">
+        <div id="capture-area">
+            <h2 id="reportTitle" style="margin: 0 0 15px 0;">All Stores Operations Report</h2>
+            <table>
+                <thead><tr id="masterHead"></tr></thead>
+                <tbody id="masterBody"></tbody>
+            </table>
+            <p id="exportTime" style="font-size: 10px; margin-top: 15px; color: #64748b;"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyZEhDceen6gqLQF6CIyVEqVPOBl5wwIqWzu2Um_-jlY8lSx8yG82kCDJq9kyWobvVwNQ/exec';
+    let globalData = [];
+    const isTuesday = new Date().getDay() === 2;
+
+    window.onload = () => { 
+        if(isTuesday) document.getElementById('fvPiContainer').style.display = 'block'; 
+    };
+
+    function showTab(id) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if(id === 'db') loadDashboard();
+    }
+
+    async function loadDashboard() {
+        const tbody = document.getElementById('masterBody');
+        tbody.innerHTML = '<tr><td colspan="20">Loading real-time dashboard...</td></tr>';
+        try {
+            const res = await fetch(scriptURL);
+            globalData = await res.json();
+            renderTable();
+        } catch(e) { 
+            tbody.innerHTML = '<tr><td colspan="20" style="color:red">Error loading data.</td></tr>'; 
+        }
+    }
+
+    function renderTable() {
+        if (!globalData.length) return;
+        const headers = globalData[0];
+        let rows = globalData.slice(1);
+
+        // Remove F&V PI column if it's not Tuesday
+        let finalHeaders = [...headers];
+        let finalRows = rows.map(r => [...r]);
+        if (!isTuesday) {
+            const piIndex = finalHeaders.indexOf("F&V PI (Tue)");
+            if (piIndex > -1) {
+                finalHeaders.splice(piIndex, 1);
+                finalRows = finalRows.map(r => { r.splice(piIndex, 1); return r; });
+            }
+        }
+
+        document.getElementById('masterHead').innerHTML = finalHeaders.map(h => `<th>${h}</th>`).join('');
+        document.getElementById('masterBody').innerHTML = finalRows.map(r => `
+            <tr>${r.map((cell, i) => `<td><span class="${getCls(cell)}">${cell}</span></td>`).join('')}</tr>
+        `).join('');
+    }
+
+    function getCls(c) {
+        if(String(c).includes('Done')) return 'badge bg-done';
+        if(String(c).includes('Pending')) return 'badge bg-pending';
+        if(c !== "" && c !== "❌ Pending" && c !== "—") return 'badge badge-id';
+        return '';
+    }
+
+    function exportLandscapeReport() {
+        const area = document.getElementById('capture-area');
+        const btn = event.target;
+        btn.innerText = "Generating PNG...";
+        document.getElementById('exportTime').innerText = "Report Date: " + new Date().toLocaleString();
+
+        html2canvas(area, {
+            scale: 2, 
+            useCORS: true,
+            scrollX: 0,
+            scrollY: 0,
+            width: area.scrollWidth, // Ensures full horizontal capture
+            height: area.scrollHeight
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Store_Report_Landscape_${new Date().toLocaleDateString()}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+            btn.innerText = "📸 Export Full Landscape Report (PNG)";
+        });
+    }
+
+    document.getElementById('storeForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Submitting..."; btn.disabled = true;
+        fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
+            .then(() => { 
+                alert("Submission successful!"); 
+                e.target.reset(); 
+                btn.innerText = "SUBMIT ALL ACTIVITIES"; 
+                btn.disabled = false; 
+            })
+            .catch(() => { 
+                alert("Error! Check internet."); 
+                btn.disabled = false; 
+                btn.innerText = "SUBMIT ALL ACTIVITIES";
+            });
+    });
+</script>
+</body>
+</html>
