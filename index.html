@@ -88,6 +88,8 @@
             <label>Self Help</label><select name="selfHelp"><option value="">Pending</option><option>Done</option></select>
             <label>Near Expiry Check</label><select name="nearExpiry"><option value="">Pending</option><option>Done</option></select>
             <label>Cash Reco</label><select name="cashReco"><option value="">Pending</option><option>Done</option></select>
+            <label>F&V Indent (ID)</label><input type="text" name="fvIndent">
+            <label>DFB Indent (ID)</label><input type="text" name="dfbIndent">
             
             <div id="fvPiContainer" style="display:none;">
                 <label style="color:var(--danger)">F&V PI (Tuesday Only)</label>
@@ -99,7 +101,7 @@
 </div>
 
 <div id="db" class="tab-content">
-    <button class="export-btn" onclick="exportLandscapeReport()">📸 Export Full Landscape Report (PNG)</button>
+    <button class="export-btn" onclick="exportLandscapeReport()">📸 Export Full Report (PNG)</button>
     
     <div class="table-wrapper">
         <div id="capture-area">
@@ -114,7 +116,7 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyZEhDceen6gqLQF6CIyVEqVPOBl5wwIqWzu2Um_-jlY8lSx8yG82kCDJq9kyWobvVwNQ/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw1VOfNaI7QfWiKeBCxdu2kAtPXBg5leemoF5Qb3moHop9s6dFG7DOI9N9IIf-A2yS5nw/exec';
     let globalData = [];
     const isTuesday = new Date().getDay() === 2;
 
@@ -214,4 +216,5 @@
 </body>
 
 </html>
+
 
