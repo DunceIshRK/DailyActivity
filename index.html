@@ -73,8 +73,8 @@
             <label>RMS</label><select name="rms"><option value="">Pending</option><option>Done</option></select>
             <label>OSA Morning</label><select name="osaMorning"><option value="">Pending</option><option>Done</option></select>
             <label>EMS Portal Entry</label><select name="emsPortal"><option value="">Pending</option><option>Done</option></select>
-            <label>AI Count Correction (ID)</label><input type="text" name="aiCount">
-            <label>F&V Dump (ID)</label><input type="text" name="fvDump">
+            <label>AI Count Correction (Doc No)</label><input type="text" name="aiCount">
+            <label>F&V Dump (Doc No)</label><input type="text" name="fvDump">
         </div>
 
         <div class="section-card">
@@ -85,8 +85,8 @@
             <label>JM Order Clearance</label><select name="jmOrder"><option value="">Pending</option><option>Done</option></select>
             <label>BOC Login</label><select name="bocLogin"><option value="">Pending</option><option>Done</option></select>
             <label>DFB Indent</label><select name="dfbIndent"><option value="">Pending</option><option>Done</option></select>
-            <label>PIS (ID)</label><input type="text" name="pis">
-            <label>F&V Indent (ID)</label><input type="text" name="fvIndent">
+            <label>PIS (Doc No)</label><input type="text" name="pis">
+            <label>F&V Indent (Doc No)</label><input type="text" name="fvIndent">
         </div>
 
         <div class="section-card">
@@ -94,10 +94,10 @@
             <h3>Deadline : 3 PM - 6 PM</h3>
             <label>OSA Evening</label><select name="osaEvening"><option value="">Pending</option><option>Done</option></select>
             <label>Near Expiry Check</label><select name="nearExpiry"><option value="">Pending</option><option>Done</option></select>
-            <label>JM Count Correction (ID)</label><input type="text" name="jmCount">
-            <label>Articles from List (ID)</label><input type="text" name="articles">
-            <label>Non F&V Dump (ID)</label><input type="text" name="nonFvDump">
-            <label>Daily Self Help (ID)</label><input type="text" name="selfHelp">
+            <label>JM Count Correction (Doc No)</label><input type="text" name="jmCount">
+            <label>Articles from List (Doc No)</label><input type="text" name="articles">
+            <label>Non F&V Dump (Doc No)</label><input type="text" name="nonFvDump">
+            <label>Daily Self Help (Enter no of Bays)</label><input type="text" name="selfHelp">
         </div>
 
         <div class="section-card">
@@ -110,14 +110,14 @@
         <div id="tueGroup" class="section-card" style="display:none; border: 2.5px solid var(--danger);">
             <span class="deadline-badge">TUESDAY ONLY</span>
             <h3 style="color:var(--danger)">Weekly Inventory (PI)</h3>
-            <label>F&V PI (ID)</label><input type="text" name="fvPi">
-            <label>Crate PI (ID)</label><input type="text" name="cratePi">
-            <label>Consumable PI (ID)</label><input type="text" name="consumablePi">
+            <label>F&V PI (Posting Doc No)</label><input type="text" name="fvPi">
+            <label>Crate PI (Posting Doc No)</label><input type="text" name="cratePi">
+            <label>Consumable PI (Posting Doc No)</label><input type="text" name="consumablePi">
         </div>
 
         <button type="submit" id="submitBtn">SUBMIT ALL ACTIVITIES</button>
     </form>
-</div>
+</div> 
 
 <div id="db" class="tab-content">
     <button class="export-btn" onclick="exportLandscapeReport()">📸 EXPORT ULTRA-HD REPORT (PNG)</button>
@@ -224,3 +224,4 @@
 </script>
 </body>
 </html>
+
