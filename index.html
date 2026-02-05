@@ -179,34 +179,36 @@
         return '';
     }
 
-    function exportLandscapeReport() {
-        const area = document.getElementById('capture-area');
-        const btn = event.target;
-        btn.innerText = "PROCESSING HIGH-RES IMAGE...";
-        btn.disabled = true;
-        
-        document.getElementById('exportTime').innerText = "Report Generated On: " + new Date().toLocaleString();
+function exportLandscapeReport() {
+    const area = document.getElementById('capture-area');
+    const btn = event.target;
+    
+    // 1. Temporarily disable "Sticky" behavior for the export
+    const stickyCells = document.querySelectorAll('td:first-child, th:first-child');
+    stickyCells.forEach(cell => cell.style.position = 'static');
 
-        html2canvas(area, { 
-            scale: 4, // 4x resolution for pixel-perfect WhatsApp sharing
-            useCORS: true, 
-            allowTaint: true,
-            backgroundColor: "#ffffff",
-            width: area.scrollWidth, 
-            height: area.scrollHeight,
-            onclone: (clonedDoc) => {
-                // Ensure sticky columns render correctly in the clone
-                clonedDoc.getElementById('capture-area').style.width = 'fit-content';
-            }
-        }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `Store_Report_HD_${new Date().toLocaleDateString()}.png`;
-            link.href = canvas.toDataURL("image/png", 1.0); // Highest quality JPG/PNG
-            link.click();
-            btn.innerText = "📸 EXPORT ULTRA-HD REPORT (PNG)";
-            btn.disabled = false;
-        });
-    }
+    btn.innerText = "GENERATING HD IMAGE...";
+    document.getElementById('exportTime').innerText = "Report Date: " + new Date().toLocaleString();
+
+    html2canvas(area, {
+        scale: 4, 
+        useCORS: true,
+        scrollX: 0, // Reset scroll position for the capture
+        scrollY: 0,
+        width: area.scrollWidth,
+        height: area.scrollHeight,
+        windowWidth: area.scrollWidth // Force the virtual window to match table width
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `Store_Report_HD_${new Date().toLocaleDateString()}.png`;
+        link.href = canvas.toDataURL("image/png", 1.0);
+        link.click();
+        
+        // 2. Re-enable "Sticky" behavior after export
+        stickyCells.forEach(cell => cell.style.position = 'sticky');
+        btn.innerText = "📸 EXPORT ULTRA-HD REPORT (PNG)";
+    });
+}
 
     document.getElementById('storeForm').addEventListener('submit', e => {
         e.preventDefault();
@@ -224,5 +226,6 @@
 </script>
 </body>
 </html>
+
 
 
