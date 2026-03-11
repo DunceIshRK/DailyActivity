@@ -6,33 +6,64 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; }
+        
         * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+        
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
+        
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
         .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
         .tab-content { display: none; max-width: 100%; margin: auto; }
         .tab-content.active { display: block; }
+
         .section-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         h3 { margin: 0 0 15px 0; color: var(--primary); font-size: 1rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
         .deadline-badge { background: #fee2e2; color: #991b1b; font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; float: right; font-weight: bold; }
+        
         label { display: block; margin-top: 14px; font-weight: 700; font-size: 0.9rem; color: #475569; }
         input, select { width: 100%; padding: 14px; margin-top: 6px; border: 1.5px solid #cbd5e1; border-radius: 10px; box-sizing: border-box; font-size: 16px; background: #fff; }
+        
         button#submitBtn { width: 50%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2); display: block; margin: 0 auto; }
         .export-btn { width: 100%; padding: 16px; background: var(--whatsapp); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; transition: all 0.2s;}
+        
         #capture-area { padding: 30px; background: white; border-radius: 20px; width: fit-content; }
-        .table-wrapper { overflow-x: auto; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        table { border-collapse: collapse; font-size: 12px; min-width: 1950px; line-height: 1.5; } 
+        
+        /* -------------------------------------------
+           NEW STICKY TABLE SETTINGS
+           ------------------------------------------- */
+        .table-wrapper { 
+            overflow: auto; /* Enables both vertical and horizontal scroll */
+            max-height: 70vh; /* Keeps the table within the screen view */
+            background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+        }
+        
+        table { border-collapse: separate; border-spacing: 0; font-size: 12px; min-width: 1950px; line-height: 1.5; } 
+        
         th { background: #f1f5f9; padding: 14px 12px; text-align: left; border-bottom: 2.5px solid #e2e8f0; white-space: nowrap; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 800; }
-        td { padding: 12px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; border-right: 1px solid #f1f5f9; }
-        td:first-child, th:first-child { position: sticky; left: 0; background: white; z-index: 2; font-weight: 800; border-right: 3px solid #e2e8f0; }
-        th:first-child { background: #f1f5f9; z-index: 3; }
-        .badge { padding: 10px 12px; border-radius: 8px; font-weight: 1000; font-size: 14px; display: inline-block; letter-spacing: 0.5px; }
+        td { padding: 12px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; border-right: 1px solid #f1f5f9; background: white; }
+        
+        /* STORE CODE (LEFT LOCK) & LARGER FONT */
+        td:first-child { position: sticky; left: 0; z-index: 5; border-right: 3px solid #e2e8f0; }
+        td:first-child .badge { font-size: 14px; padding: 8px 12px; } /* BIG STORE FONT */
+
+        /* HEADERS (TOP LOCK) */
+        #groupHead th { position: sticky; top: 0; z-index: 10; height: 42px; box-sizing: border-box; }
+        #masterHead th { position: sticky; top: 42px; z-index: 9; height: 48px; box-sizing: border-box; background: #f1f5f9; }
+        
+        /* CORNERS (TOP-LEFT LOCK) */
+        #groupHead th:first-child { position: sticky; left: 0; top: 0; z-index: 12; background: white; border-right: 3px solid #e2e8f0; }
+        #masterHead th:first-child { position: sticky; left: 0; top: 42px; z-index: 11; background: #f1f5f9; border-right: 3px solid #e2e8f0; }
+
+        .group-header { text-align: center; font-size: 13px; font-weight: 900; letter-spacing: 1px; border-bottom: 3px solid white !important; border-right: 2px solid white; padding: 10px !important; }
+        /* ------------------------------------------- */
+
+        .badge { padding: 6px 10px; border-radius: 8px; font-weight: 800; font-size: 10px; display: inline-block; letter-spacing: 0.5px; }
         .bg-done { background: #dcfce7; color: var(--success); border: 1px solid #bbf7d0; }
         .bg-pending { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
         .badge-id { background: #eff6ff; color: var(--primary); font-family: "SF Mono", "Monaco", monospace; border: 1px solid #dbeafe; }
-        .group-header { text-align: center; font-size: 13px; font-weight: 900; letter-spacing: 1px; border-bottom: 3px solid white !important; border-right: 2px solid white; padding: 10px !important; }
-        #groupHead th:first-child { position: sticky; left: 0; background: white; z-index: 4; border-right: 3px solid #e2e8f0; }
+        
         #adminControls { display: none; margin-bottom: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         #adminControls select { width: auto; padding: 10px 15px; margin-top: 0; margin-left: 10px; cursor: pointer; font-weight: bold;}
     </style>
@@ -116,6 +147,7 @@
 </div> 
 
 <div id="db" class="tab-content">
+    
     <div id="adminControls">
         <label style="margin-top:0; display:inline-block; font-size: 1rem; color: var(--danger);"><strong>Select Historical Date:</strong></label>
         <select id="historyDateSelect" onchange="loadDashboard('admin')"></select>
@@ -246,7 +278,6 @@
                 storeDataMap[store][1] = store;                              
             });
 
-            // The server ALREADY filtered the correct date, so we blindly trust it and grab the latest entry
             rows.forEach(row => {
                 const store = row[1]; // Column B is the Store ID in Logs
                 if (!store) return;
@@ -257,7 +288,6 @@
                     allStores.push(store); 
                 }
 
-                // Overwrite with latest values for that store
                 for (let i = 2; i < headers.length; i++) {
                     const val = row[i];
                     if (val !== undefined && val !== "" && String(val).trim() !== "") {
@@ -330,8 +360,14 @@
     function exportLandscapeReport() {
         const area = document.getElementById('capture-area');
         const btn = document.getElementById('exportBtn');
-        const stickyCells = document.querySelectorAll('td:first-child, th:first-child');
-        stickyCells.forEach(cell => cell.style.position = 'static');
+        
+        // Disable sticky logic so HTML2Canvas captures everything cleanly
+        const stickyElements = document.querySelectorAll('td:first-child, th');
+        const oldPositions = [];
+        stickyElements.forEach((el, index) => {
+            oldPositions[index] = el.style.position;
+            el.style.position = 'static';
+        });
         
         btn.innerText = "GENERATING HD IMAGE...";
         btn.disabled = true;
@@ -350,7 +386,10 @@
             link.href = canvas.toDataURL("image/png", 1.0);
             link.click();
             
-            stickyCells.forEach(cell => cell.style.position = 'sticky');
+            // Restore sticky logic
+            stickyElements.forEach((el, index) => {
+                el.style.position = oldPositions[index] || '';
+            });
             btn.innerText = "📸 EXPORT ULTRA-HD REPORT (PNG)";
             btn.disabled = false;
         });
@@ -372,4 +411,3 @@
 </script>
 </body>
 </html>
-
