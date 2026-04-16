@@ -6,80 +6,66 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; }
-        * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+        * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
-        
-        /* Tabs */
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
         .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
-        .tab-content { display: none; max-width: 100%; margin: auto; }
+        .tab-content { display: none; }
         .tab-content.active { display: block; }
-        /* Cards & Form */
         .section-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         h3 { margin: 0 0 15px 0; color: var(--primary); font-size: 1rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
         .deadline-badge { background: #fee2e2; color: #991b1b; font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; float: right; font-weight: bold; }
         label { display: block; margin-top: 14px; font-weight: 700; font-size: 0.9rem; color: #475569; }
         input, select { width: 100%; padding: 14px; margin-top: 6px; border: 1.5px solid #cbd5e1; border-radius: 10px; box-sizing: border-box; font-size: 16px; background: #fff; }
-        button#submitBtn { width: 50%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2); display: block; margin: 0 auto; }
-        
-        /* Dashboard Header Controls */
+        button#submitBtn { width: 100%; max-width: 400px; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: block; margin: 20px auto; }
         .db-controls { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-end; flex-wrap: wrap; }
-        .export-btn { flex: 2; padding: 16px; background: var(--whatsapp); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: all 0.2s;}
         .filter-group { flex: 1; min-width: 250px; }
         .filter-group label { margin-top: 0; margin-bottom: 5px; font-size: 0.8rem; text-transform: uppercase; color: #64748b; }
         .filter-group select { padding: 14px; background: white; border: 2px solid var(--primary); color: var(--primary); font-weight: bold; }
-        /* Table UI */
-        #capture-area { padding: 30px; background: white; border-radius: 20px; width: fit-content; }
+        .export-btn { flex: 1; padding: 16px; background: var(--whatsapp); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; min-width: 200px; }
         .table-wrapper { overflow: auto; max-height: 75vh; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        table { border-collapse: separate; border-spacing: 0; font-size: 12px; line-height: 1.5; } 
+        table { border-collapse: separate; border-spacing: 0; font-size: 12px; line-height: 1.5; min-width: 100%; } 
         th { background: #f1f5f9; padding: 14px 12px; text-align: left; border-bottom: 2.5px solid #e2e8f0; white-space: nowrap; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 800; }
-        td { padding: 12px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; border-right: 1px solid #f1f5f9; background: white; }
-        
-        /* Monospace Store Column */
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; border-right: 1px solid #f1f5f9; background: white; }
         td:first-child { position: sticky; left: 0; z-index: 5; border-right: 3px solid #e2e8f0; }
-        td:first-child .badge { font-size: 14px; padding: 8px 12px; letter-spacing: 2px; font-family: "Consolas", "SF Mono", "Monaco", monospace; }
-        /* Sticky Headers */
-        #groupHead th { position: sticky; top: 0; z-index: 10; height: 42px; box-sizing: border-box; }
-        #masterHead th { position: sticky; top: 42px; z-index: 9; height: 48px; box-sizing: border-box; background: #f1f5f9; }
-        #groupHead th:first-child { position: sticky; left: 0; top: 0; z-index: 12; background: white; border-right: 3px solid #e2e8f0; }
-        #masterHead th:first-child { position: sticky; left: 0; top: 42px; z-index: 11; background: #f1f5f9; border-right: 3px solid #e2e8f0; }
-        .group-header { text-align: center; font-size: 13px; font-weight: 900; letter-spacing: 1px; border-bottom: 3px solid white !important; border-right: 2px solid white; padding: 10px !important; }
-        /* Badge Styling */
-        .badge { padding: 6px 10px; border-radius: 8px; font-weight: 800; font-size: 10px; display: inline-block; letter-spacing: 0.5px; }
-        .bg-done { background: #dcfce7; color: var(--success); border: 1px solid #bbf7d0; }
-        .bg-pending { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
+        td:first-child .badge { font-size: 14px; padding: 8px 12px; letter-spacing: 2px; font-family: "Consolas", monospace; }
+        #groupHead th { position: sticky; top: 0; z-index: 10; background: #f8fafc; }
+        #masterHead th { position: sticky; top: 40px; z-index: 9; background: #f1f5f9; }
+        #groupHead th:first-child { z-index: 12; left: 0; }
+        #masterHead th:first-child { z-index: 11; left: 0; }
+        .group-header { text-align: center; border-bottom: 3px solid white !important; padding: 8px !important; font-weight: 900; }
+        .badge { padding: 5px 8px; border-radius: 6px; font-weight: 800; font-size: 10px; display: inline-block; }
+        .bg-done { background: #dcfce7; color: var(--success); }
+        .bg-pending { background: #fee2e2; color: var(--danger); }
         .badge-id { background: #eff6ff; color: var(--primary); border: 1px solid #dbeafe; }
-        
-        #adminControls { display: none; margin-bottom: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        
-        /* Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 12px; width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .modal-content input { width: 100%; padding: 12px; margin: 15px 0; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box; text-align: center; letter-spacing: 4px; font-family: monospace; }
-        .modal-buttons { display: flex; gap: 10px; }
-        .modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-cancel { background: #e2e8f0; color: #475569; }
-        .btn-submit { background: var(--primary); color: white; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 25px; border-radius: 15px; width: 320px; text-align: center; }
+        .modal-content input { text-align: center; letter-spacing: 5px; margin-bottom: 20px; border: 2px solid #cbd5e1; }
+        .modal-btns { display: flex; gap: 10px; }
+        .modal-btns button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
+
 <div id="passwordModal" class="modal-overlay">
     <div class="modal-content">
-        <h3 style="border-bottom:none; margin-bottom: 5px;">Admin Access</h3>
-        <p style="margin-top:0; font-size: 14px; color: #64748b;">Enter passcode for Historical Data</p>
-        <input type="password" id="adminPasscode" placeholder="••••••••">
-        <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closePasswordModal()">Cancel</button>
-            <button class="btn-submit" onclick="submitPassword()">Unlock</button>
+        <h2 style="margin:0; font-size: 1.2rem;">Admin Verification</h2>
+        <p style="color: #64748b; font-size: 0.9rem;">Enter PIN for Historical Data</p>
+        <input type="password" id="adminPasscode" placeholder="••••">
+        <div class="modal-btns">
+            <button style="background:#e2e8f0;" onclick="closeModal()">Cancel</button>
+            <button style="background:var(--primary); color:white;" onclick="submitPin()">Unlock</button>
         </div>
     </div>
 </div>
+
 <div class="tabs">
     <button class="tab-btn active" id="btn-form" onclick="showTab('form')">ENTRY FORM</button>
-    <button class="tab-btn" id="btn-today" onclick="showTab('db', 'today')">TODAY'S DASHBOARD</button>
-    <button class="tab-btn" id="btn-admin" style="background-color: #f1f5f9; color: var(--danger);" onclick="checkAccessAndShow()">🔒 HISTORICAL (ADMIN)</button>
+    <button class="tab-btn" id="btn-today" onclick="showTab('db', 'today')">DASHBOARD</button>
+    <button class="tab-btn" id="btn-admin" style="color:var(--danger)" onclick="checkAdmin()">🔒 HISTORY</button>
 </div>
+
 <div id="form" class="tab-content active">
     <form id="storeForm">
         <div class="section-card">
@@ -101,12 +87,12 @@
             <span class="deadline-badge">10 AM</span>
             <h3>Deadline : 10 AM</h3>
             <label>RMS</label><select name="rms"><option value="">Pending</option><option>Done</option></select>
-            <label>On Shelf Availability Morning</label><select name="osaMorning"><option value="">Pending</option><option>Done</option></select>
-            <label>EMS Portal Entry</label><select name="emsPortal"><option value="">Pending</option><option>Done</option></select>
+            <label>OSA Morning</label><select name="osaMorning"><option value="">Pending</option><option>Done</option></select>
+            <label>EMS Portal</label><select name="emsPortal"><option value="">Pending</option><option>Done</option></select>
             <label>AI Count Correction (Doc No)</label><input type="text" name="aiCount">
             <label>JM Count Correction (Doc No)</label><input type="text" name="jmCount">
             <label>Articles from List (Doc No)</label><input type="text" name="articles">
-            <label>F&V Dump (Doc No)</label><input type="text" name="fvDump">
+            <label>Negative Count Correction (Doc No)</label><input type="text" name="negCount"> <label>F&V Dump (Doc No)</label><input type="text" name="fvDump">
         </div>
         <div class="section-card">
             <span class="deadline-badge">12 PM</span>
@@ -122,10 +108,10 @@
         <div class="section-card">
             <span class="deadline-badge">3 PM - 6 PM</span>
             <h3>Deadline : 3 PM - 6 PM</h3>
-            <label>On Shelf Availability Evening</label><select name="osaEvening"><option value="">Pending</option><option>Done</option></select>
+            <label>OSA Evening</label><select name="osaEvening"><option value="">Pending</option><option>Done</option></select>
             <label>Near Expiry Check</label><select name="nearExpiry"><option value="">Pending</option><option>Done</option></select>
             <label>Non F&V Dump (Doc No)</label><input type="text" name="nonFvDump">
-            <label>Daily Self Help (Enter no of Bays)</label><input type="text" name="selfHelp">
+            <label>Daily Self Help</label><input type="text" name="selfHelp">
         </div>
         <div class="section-card">
             <span class="deadline-badge">EOD</span>
@@ -133,249 +119,177 @@
             <label>Pending GRN</label><select name="pendingGrn"><option value="">Pending</option><option>Done</option></select>
             <label>EOD Cash Reco</label><select name="cashReco"><option value="">Pending</option><option>Done</option></select>
         </div>
-        <div id="tueGroup" class="section-card" style="display:none; border: 2.5px solid var(--danger);">
+        <div id="tueGroup" class="section-card" style="display:none; border: 2px solid var(--danger);">
             <span class="deadline-badge">TUESDAY ONLY</span>
             <h3 style="color:var(--danger)">Weekly Inventory (PI)</h3>
-            <label>F&V PI (Posting Doc No)</label><input type="text" name="fvPi">
-            <label>Crate PI (Posting Doc No)</label><input type="text" name="cratePi">
-            <label>Consumable PI (Posting Doc No)</label><input type="text" name="consumablePi">
+            <label>F&V PI</label><input type="text" name="fvPi">
+            <label>Crate PI</label><input type="text" name="cratePi">
+            <label>Consumable PI</label><input type="text" name="consumablePi">
         </div>
         <button type="submit" id="submitBtn">SUBMIT ACTIVITIES</button>
     </form>
 </div> 
+
 <div id="db" class="tab-content">
-    <div id="adminControls">
-        <label style="margin-top:0; display:inline-block; font-size: 1rem; color: var(--danger);"><strong>Select Historical Date:</strong></label>
+    <div id="adminControls" class="section-card" style="margin-bottom:10px; padding:15px;">
+        <label style="margin:0; color:var(--danger)">Select History Date:</label>
         <select id="historyDateSelect" onchange="loadDashboard('admin')"></select>
     </div>
     <div class="db-controls">
         <div class="filter-group">
-            <label>🎯 Filter & Sort Dashboard</label>
-            <select id="statusFilter" onchange="applyUIfilter()">
-                <option value="all">Full Dashboard (Show All)</option>
-                <option value="max_pending">Maximum Pending (Sort Max to Min)</option>
-                <option value="pending_10am">Pending: 10 AM DEADLINE</option>
-                <option value="pending_12pm">Pending: 12 PM DEADLINE</option>
-                <option value="pending_3pm">Pending: 3 PM - 6 PM DEADLINE</option>
-                <option value="pending_eod">Pending: EOD DEADLINE</option>
-                <!-- ↓ Tuesday option: shown only on Tuesdays via JS -->
-                <option value="pending_tue" id="tuesdayOption" style="display:none;">Pending: TUESDAY ONLY</option>
+            <label>🎯 Filter & Auto-Sort View</label>
+            <select id="statusFilter" onchange="applyFilter()">
+                <option value="all">Full Dashboard (Unsorted)</option>
+                <option value="max_pending">Ranked: Highest Pending (Overall)</option>
+                <option value="p_10am">Ranked: 10 AM Pending Only</option>
+                <option value="p_12pm">Ranked: 12 PM Pending Only</option>
+                <option value="p_3pm">Ranked: 3-6 PM Pending Only</option>
+                <option value="p_eod">Ranked: EOD Pending Only</option>
+                <option value="p_tue" id="optTue">Ranked: Tuesday PI Pending</option>
             </select>
         </div>
-        <button id="exportBtn" class="export-btn" onclick="exportLandscapeReport()">📸 EXPORT FILTERED REPORT (PNG)</button>
+        <button id="exportBtn" class="export-btn" onclick="exportLandscapeReport()">📸 EXPORT PNG</button>
     </div>
     <div class="table-wrapper">
         <div id="capture-area">
-            <h1 id="reportTitle" style="margin: 0 0 5px 0; color: #1e293b; font-size: 1.6rem;">Store Operations Performance</h1>
-            <p id="subTitle" style="margin-top: 0; color: #64748b; font-weight: 600;">Full System Landscape View</p>
+            <h1 id="dbTitle" style="margin:0; font-size:1.5rem;">Operations Performance</h1>
+            <p id="dbDate" style="margin:0 0 15px 0; color:#64748b; font-weight:bold;"></p>
             <table>
                 <thead>
-                    <tr id="groupHead"></tr> 
+                    <tr id="groupHead"></tr>
                     <tr id="masterHead"></tr>
                 </thead>
                 <tbody id="masterBody"></tbody>
             </table>
-            <p id="exportTime" style="font-size: 12px; color:#94a3b8; margin-top: 20px; font-weight: bold;"></p>
         </div>
     </div>
 </div>
+
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyITfSQI7cD1rSIRjVB8CWXaSWHlyHmjJAe2X-dz7VAd43YSP7p5RpcVgNBPjuevZrM9w/exec';
-    let globalAdminPin = ""; let isAdminAuthorized = false; let currentGlobalData = null;
+    let rawData = null;
+    let authPin = "";
 
-    window.onload = () => { 
-        const isTuesday = new Date().getDay() === 2;
-        // Show Tuesday section in entry form only on Tuesdays
-        if (isTuesday) document.getElementById('tueGroup').style.display = 'block'; 
-        // Show Tuesday filter option only on Tuesdays
-        document.getElementById('tuesdayOption').style.display = isTuesday ? '' : 'none';
-
-        const select = document.getElementById('historyDateSelect');
-        for (let i = 1; i <= 15; i++) {
-            let d = new Date(); d.setDate(d.getDate() - i);
-            let mm = String(d.getMonth() + 1).padStart(2, '0'); let dd = String(d.getDate()).padStart(2, '0');
-            let opt = document.createElement('option'); opt.value = `${d.getFullYear()}-${mm}-${dd}`; 
-            opt.text = d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-            select.appendChild(opt);
+    window.onload = () => {
+        if(new Date().getDay() === 2) document.getElementById('tueGroup').style.display = 'block';
+        const sel = document.getElementById('historyDateSelect');
+        for(let i=1; i<=15; i++) {
+            let d = new Date(); d.setDate(d.getDate()-i);
+            let val = d.toISOString().split('T');
+            sel.innerHTML += `<option value="${val}">${d.toDateString()}</option>`;
         }
     };
 
-    function checkAccessAndShow() {
-        if (!isAdminAuthorized) {
-            document.getElementById('passwordModal').style.display = 'flex';
-            document.getElementById('adminPasscode').value = ''; document.getElementById('adminPasscode').focus();
-        } else { showTab('db', 'admin'); }
-    }
-    function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
-    function submitPassword() {
-        const passcode = document.getElementById('adminPasscode').value;
-        if (passcode) { globalAdminPin = passcode; isAdminAuthorized = true; closePasswordModal(); showTab('db', 'admin'); }
-    }
-    document.getElementById('adminPasscode').addEventListener('keypress', (e) => { if (e.key === 'Enter') submitPassword(); });
-
-    function showTab(id, viewMode = 'today') {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    function showTab(id, mode='today') {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        if (id === 'form') document.getElementById('btn-form').classList.add('active');
-        if (id === 'db' && viewMode === 'today') document.getElementById('btn-today').classList.add('active');
-        if (id === 'db' && viewMode === 'admin') document.getElementById('btn-admin').classList.add('active');
-        if(id === 'db') loadDashboard(viewMode);
+        const activeBtn = mode === 'admin' ? 'btn-admin' : 'btn-' + id;
+        document.getElementById(activeBtn).classList.add('active');
+        if(id === 'db') loadDashboard(mode);
     }
 
-    async function loadDashboard(viewMode) {
-        const tbody = document.getElementById('masterBody');
-        const adminControls = document.getElementById('adminControls');
-        const exportBtn = document.getElementById('exportBtn');
-        document.getElementById('statusFilter').value = 'all';
-        exportBtn.disabled = true; exportBtn.innerText = "⏳ LOADING DATA...";
-        let fetchURL = scriptURL + "?view=" + viewMode;
-        let targetDateObj = new Date();
-        if (viewMode === 'admin') {
-            adminControls.style.display = 'block';
-            const selectedStr = document.getElementById('historyDateSelect').value;
-            fetchURL += `&pin=${encodeURIComponent(globalAdminPin)}&date=${selectedStr}`;
-            const [y, m, d] = selectedStr.split('-'); targetDateObj = new Date(y, m - 1, d); 
-        } else { adminControls.style.display = 'none'; }
-        tbody.innerHTML = '<tr><td colspan="25" style="text-align:center; padding: 20px;">Fetching logs from Google...</td></tr>';
+    function checkAdmin() { document.getElementById('passwordModal').style.display = 'flex'; document.getElementById('adminPasscode').focus(); }
+    function closeModal() { document.getElementById('passwordModal').style.display = 'none'; }
+    function submitPin() { authPin = document.getElementById('adminPasscode').value; closeModal(); showTab('db', 'admin'); }
+
+    async function loadDashboard(mode) {
+        const body = document.getElementById('masterBody');
+        body.innerHTML = '<tr><td>Fetching Data...</td></tr>';
+        let url = scriptURL + "?view=" + mode;
+        if(mode === 'admin') {
+            document.getElementById('adminControls').style.display = 'block';
+            url += `&pin=${encodeURIComponent(authPin)}&date=${document.getElementById('historyDateSelect').value}`;
+        } else { document.getElementById('adminControls').style.display = 'none'; }
+
         try {
-            const res = await fetch(fetchURL);
-            currentGlobalData = await res.json();
-            if (currentGlobalData.error) { isAdminAuthorized = false; alert("❌ " + currentGlobalData.error); return; }
-            renderTable(targetDateObj);
-        } catch(e) { tbody.innerHTML = '<tr><td>Connection Error.</td></tr>'; }
+            const res = await fetch(url);
+            rawData = await res.json();
+            if(rawData.error) { alert(rawData.error); return; }
+            render();
+        } catch(e) { body.innerHTML = '<tr><td>Error connecting to Google.</td></tr>'; }
     }
 
-    function applyUIfilter() {
-        if(!currentGlobalData) return;
-        let dateObj = new Date();
-        if(document.getElementById('adminControls').style.display === 'block') {
-            const [y, m, d] = document.getElementById('historyDateSelect').value.split('-'); dateObj = new Date(y, m - 1, d);
-        }
-        renderTable(dateObj);
-    }
+    function applyFilter() { render(); }
 
-    function renderTable(targetDateObj) {
-        const headers = currentGlobalData[0];
-        const rows = currentGlobalData.slice(1); 
-        const isTargetTuesday = targetDateObj.getDay() === 2;
-        const filterVal = document.getElementById('statusFilter').value;
-        const allStores = Array.from(document.getElementById('storeDropdown').options).map(opt => opt.value).filter(val => val !== "");
+    function render() {
+        if(!rawData) return;
+        const headers = rawData;
+        const rows = rawData.slice(1);
+        const filter = document.getElementById('statusFilter').value;
+        const checkDay = document.getElementById('historyDateSelect').value ? new Date(document.getElementById('historyDateSelect').value).getDay() : new Date().getDay();
+        const isTueDate = checkDay === 2;
         
-        let storeDataMap = {};
-        allStores.forEach(store => { 
-            storeDataMap[store] = new Array(headers.length).fill("❌ Pending"); 
-            storeDataMap[store][1] = store; 
-        });
-        rows.forEach(row => {
-            const store = row[1]; if (!store) return;
-            if (!storeDataMap[store]) { storeDataMap[store] = new Array(headers.length).fill("❌ Pending"); storeDataMap[store][1] = store; }
-            for (let i = 2; i < headers.length; i++) {
-                if (row[i] !== undefined && row[i] !== "" && String(row[i]).trim() !== "") storeDataMap[store][i] = row[i];
-            }
-        });
+        document.getElementById('optTue').style.display = isTueDate ? 'block' : 'none';
 
-        // 🎯 Column Logic Maps
-        const idxStore = [1];
-        const idx10am = [2, 3, 4, 5, 16, 17, 6];
-        const idx12pm = [7, 8, 9, 10, 11, 12, 13];
-        const idx3pm = [14, 15, 18, 19];
-        const idxEod = [20, 21];
-        const idxTue = [22, 23, 24];
+        // UPDATED INDICES FOR NEW COLUMN: RMS(2), OSA M(3), EMS(4), AI(5), JM Corr(16), Articles(17), Neg Count(18), FV Dump(6)
+        const m = { 
+            store:, 
+            t10:, 
+            t12:, 
+            t3:, 
+            eod:, 
+            tue: 
+        };
+        
+        let activeCols = [...m.store];
+        if(['all','max_pending'].includes(filter)) {
+            activeCols = activeCols.concat(m.t10, m.t12, m.t3, m.eod);
+            if(isTueDate) activeCols = activeCols.concat(m.tue);
+        } else if(filter==='p_10am') activeCols = activeCols.concat(m.t10);
+        else if(filter==='p_12pm') activeCols = activeCols.concat(m.t12);
+        else if(filter==='p_3pm') activeCols = activeCols.concat(m.t3);
+        else if(filter==='p_eod') activeCols = activeCols.concat(m.eod);
+        else if(filter==='p_tue') activeCols = activeCols.concat(m.tue);
 
-        let activeIndices = [...idxStore];
-        if (['all', 'max_pending'].includes(filterVal)) {
-            activeIndices = activeIndices.concat(idx10am, idx12pm, idx3pm, idxEod);
-            if (isTargetTuesday) activeIndices = activeIndices.concat(idxTue);
-        } 
-        else if (filterVal === 'pending_10am') activeIndices = activeIndices.concat(idx10am);
-        else if (filterVal === 'pending_12pm') activeIndices = activeIndices.concat(idx12pm);
-        else if (filterVal === 'pending_3pm') activeIndices = activeIndices.concat(idx3pm);
-        else if (filterVal === 'pending_eod') activeIndices = activeIndices.concat(idxEod);
-        else if (filterVal === 'pending_tue') activeIndices = activeIndices.concat(idxTue);
+        const allStores = Array.from(document.getElementById('storeDropdown').options).map(o => o.value).filter(v => v !== "");
+        let storeMap = {};
+        allStores.forEach(s => { storeMap[s] = new Array(headers.length).fill("❌ Pending"); storeMap[s] = s; });
+        rows.forEach(r => { let s = r; if(storeMap[s]) r.forEach((val, i) => { if(val && String(val).trim() !== "") storeMap[s][i] = val; }); });
 
-        const isP = (val) => String(val).includes('❌ Pending');
+        const isP = (v) => String(v).includes('Pending');
+        let finalRows = allStores.map(s => activeCols.map(i => storeMap[s][i]));
 
-        let finalRows = allStores.map(store => {
-            const row = storeDataMap[store];
-            return activeIndices.map(i => {
-                let val = row[i];
-                let displayVal = (!val || val === 0 || val === "❌ Pending") ? "❌ Pending" : val;
-                if (String(headers[i]).includes("(Tue)")) displayVal = isTargetTuesday ? displayVal : "—";
-                return displayVal;
-            });
-        });
-
-        // ── Sorting & Filtering ──────────────────────────────────────────────
-        if (filterVal === 'all') {
-            // Show all stores, no sort applied
-        } else if (filterVal === 'max_pending') {
-            // Sort max→min pending (already filters nothing, just sorts)
-            finalRows.sort((a, b) => b.filter(isP).length - a.filter(isP).length);
-        } else {
-            // All other filters: keep only rows with at least one pending,
-            // then sort those rows max→min pending count
-            finalRows = finalRows
-                .filter(row => row.slice(1).some(isP))
-                .sort((a, b) => b.filter(isP).length - a.filter(isP).length);
+        if(filter !== 'all') {
+            finalRows.sort((a,b) => b.slice(1).filter(isP).length - a.slice(1).filter(isP).length);
+            if(filter !== 'max_pending') finalRows = finalRows.filter(r => r.slice(1).some(isP));
         }
-        // ────────────────────────────────────────────────────────────────────
 
-        // Build Headers
-        let groupHTML = `<th class="group-header" style="background: white;"></th>`;
-        if (['all', 'max_pending'].includes(filterVal)) {
-            groupHTML += `<th colspan="7" class="group-header" style="background: #e0f2fe; color: #0369a1;">10 AM</th>
-                          <th colspan="7" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM</th>
-                          <th colspan="4" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM</th>
-                          <th colspan="2" class="group-header" style="background: #e2e8f0; color: #334155;">EOD</th>`;
-            if (isTargetTuesday) groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE</th>`;
-        } else if (filterVal === 'pending_10am') groupHTML += `<th colspan="7" class="group-header" style="background: #e0f2fe; color: #0369a1;">10 AM PENDING</th>`;
-        else if (filterVal === 'pending_12pm') groupHTML += `<th colspan="7" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM PENDING</th>`;
-        else if (filterVal === 'pending_3pm') groupHTML += `<th colspan="4" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM PENDING</th>`;
-        else if (filterVal === 'pending_eod') groupHTML += `<th colspan="2" class="group-header" style="background: #e2e8f0; color: #334155;">EOD PENDING</th>`;
-        else if (filterVal === 'pending_tue') groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE PENDING</th>`;
-
-        document.getElementById('groupHead').innerHTML = groupHTML;
-        document.getElementById('masterHead').innerHTML = activeIndices.map(i => `<th>${headers[i]}</th>`).join('');
+        let gHTML = `<th style="background:white"></th>`;
+        if(activeCols.length > 10) {
+            gHTML += `<th colspan="8" class="group-header" style="background:#e0f2fe">10 AM</th><th colspan="7" class="group-header" style="background:#fef08a">12 PM</th><th colspan="4" class="group-header" style="background:#ffedd5">3-6 PM</th><th colspan="2" class="group-header" style="background:#e2e8f0">EOD</th>`;
+            if(isTueDate) gHTML += `<th colspan="3" class="group-header" style="background:#fee2e2">TUE</th>`;
+        } else {
+            gHTML += `<th colspan="${activeCols.length-1}" class="group-header" style="background:#f1f5f9">FILTERED TARGETS</th>`;
+        }
+        
+        document.getElementById('groupHead').innerHTML = gHTML;
+        document.getElementById('masterHead').innerHTML = activeCols.map(i => `<th>${headers[i]}</th>`).join('');
         document.getElementById('masterBody').innerHTML = finalRows.map(r => {
-            const count = r.filter(isP).length;
-            // Show pending count in label for any sorted/filtered view (not "show all")
-            const label = filterVal !== 'all' ? `${r[0]} (${count})` : r[0];
-            return `<tr><td><span class="badge badge-id">${label}</span></td>${r.slice(1).map(c => `<td><span class="${getCls(c)}">${c}</span></td>`).join('')}</tr>`;
+            let pCount = r.slice(1).filter(isP).length;
+            let label = filter !== 'all' ? `${r} (${pCount})` : r;
+            return `<tr><td><span class="badge badge-id">${label}</span></td>${r.slice(1).map(c => `<td><span class="badge ${isP(c)?'bg-pending':'bg-done'}">${c}</span></td>`).join('')}</tr>`;
         }).join('');
-
-        document.getElementById('exportTime').innerText = `Viewing: ${targetDateObj.toLocaleDateString()}`;
-        const btn = document.getElementById('exportBtn');
-        btn.disabled = false; btn.innerText = "📸 EXPORT FILTERED REPORT (PNG)"; btn.style.opacity = "1";
-    }
-
-    function getCls(c) {
-        if(String(c).includes('Done')) return 'badge bg-done';
-        if(String(c).includes('Pending')) return 'badge bg-pending';
-        return 'badge badge-id';
+        document.getElementById('dbDate').innerText = "Update: " + (document.getElementById('historyDateSelect').value || "Today");
     }
 
     function exportLandscapeReport() {
         const area = document.getElementById('capture-area');
-        const btn = document.getElementById('exportBtn');
         const sticky = document.querySelectorAll('td:first-child, th');
         const old = []; sticky.forEach((el, i) => { old[i] = el.style.position; el.style.position = 'static'; });
-        btn.innerText = "SAVING..."; btn.disabled = true;
-        html2canvas(area, { scale: 4, useCORS: true }).then(canvas => {
-            const link = document.createElement('a'); link.download = `Report_${new Date().toLocaleDateString()}.png`;
-            link.href = canvas.toDataURL(); link.click();
-            sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
-            btn.innerText = "📸 EXPORT FILTERED REPORT (PNG)"; btn.disabled = false;
+        html2canvas(area, { scale: 3 }).then(canvas => {
+            const link = document.createElement('a'); link.download = 'Report.png'; link.href = canvas.toDataURL(); link.click();
+            sticky.forEach((el, i) => el.style.position = old[i]);
         });
     }
 
-    document.getElementById('storeForm').addEventListener('submit', e => {
+    document.getElementById('storeForm').onsubmit = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('submitBtn'); btn.innerText = "Submitting..."; btn.disabled = true;
-        fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
-            .then(() => { alert("Success!"); e.target.reset(); btn.innerText = "SUBMIT"; btn.disabled = false; })
-            .catch(() => { alert("Error!"); btn.disabled = false; });
-    });
+        try { await fetch(scriptURL, { method: 'POST', body: new FormData(e.target)}); alert("Success!"); e.target.reset(); } 
+        catch(e) { alert("Error!"); }
+        btn.innerText = "SUBMIT ACTIVITIES"; btn.disabled = false;
+    };
 </script>
 </body>
 </html>
