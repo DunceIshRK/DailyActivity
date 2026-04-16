@@ -8,42 +8,49 @@
         :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; }
         * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
+        
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
         .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
         .section-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         h3 { margin: 0 0 15px 0; color: var(--primary); font-size: 1rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
         .deadline-badge { background: #fee2e2; color: #991b1b; font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; float: right; font-weight: bold; }
         label { display: block; margin-top: 14px; font-weight: 700; font-size: 0.9rem; color: #475569; }
-        input, select { width: 100%; padding: 14px; margin-top: 6px; border: 1.5px solid #cbd5e1; border-radius: 10px; box-sizing: border-box; font-size: 16px; background: #fff; }
+        input, select { width: 100%; padding: 14px; margin-top: 6px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 16px; background: #fff; }
         button#submitBtn { width: 100%; max-width: 400px; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: block; margin: 20px auto; }
+        
         .db-controls { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-end; flex-wrap: wrap; }
-        .filter-group { flex: 1; min-width: 250px; }
-        .filter-group label { margin-top: 0; margin-bottom: 5px; font-size: 0.8rem; text-transform: uppercase; color: #64748b; }
-        .filter-group select { padding: 14px; background: white; border: 2px solid var(--primary); color: var(--primary); font-weight: bold; }
+        .filter-group { flex: 1; min-width: 280px; }
+        .filter-group label { margin-top: 0; margin-bottom: 5px; font-size: 0.75rem; text-transform: uppercase; color: #64748b; }
+        .filter-group select { padding: 12px; border: 2px solid var(--primary); color: var(--primary); font-weight: 800; margin-top: 0; }
         .export-btn { flex: 1; padding: 16px; background: var(--whatsapp); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; min-width: 200px; }
-        .table-wrapper { overflow: auto; max-height: 75vh; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+
+        .table-wrapper { overflow: auto; max-height: 75vh; background: white; border-radius: 14px; border: 1px solid #e2e8f0; }
         table { border-collapse: separate; border-spacing: 0; font-size: 12px; line-height: 1.5; min-width: 100%; } 
-        th { background: #f1f5f9; padding: 14px 12px; text-align: left; border-bottom: 2.5px solid #e2e8f0; white-space: nowrap; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 800; }
+        th { background: #f1f5f9; padding: 12px; text-align: left; border-bottom: 2.5px solid #e2e8f0; white-space: nowrap; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 800; }
         td { padding: 10px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; border-right: 1px solid #f1f5f9; background: white; }
+        
         td:first-child { position: sticky; left: 0; z-index: 5; border-right: 3px solid #e2e8f0; }
         td:first-child .badge { font-size: 14px; padding: 8px 12px; letter-spacing: 2px; font-family: "Consolas", monospace; }
+
         #groupHead th { position: sticky; top: 0; z-index: 10; background: #f8fafc; }
         #masterHead th { position: sticky; top: 40px; z-index: 9; background: #f1f5f9; }
         #groupHead th:first-child { z-index: 12; left: 0; }
         #masterHead th:first-child { z-index: 11; left: 0; }
         .group-header { text-align: center; border-bottom: 3px solid white !important; padding: 8px !important; font-weight: 900; }
+
         .badge { padding: 5px 8px; border-radius: 6px; font-weight: 800; font-size: 10px; display: inline-block; }
         .bg-done { background: #dcfce7; color: var(--success); }
         .bg-pending { background: #fee2e2; color: var(--danger); }
         .badge-id { background: #eff6ff; color: var(--primary); border: 1px solid #dbeafe; }
+
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 25px; border-radius: 15px; width: 320px; text-align: center; }
-        .modal-content input { text-align: center; letter-spacing: 5px; margin-bottom: 20px; border: 2px solid #cbd5e1; }
-        .modal-btns { display: flex; gap: 10px; }
-        .modal-btns button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .modal-content input { text-align: center; letter-spacing: 5px; margin-bottom: 20px; border: 2px solid #cbd5e1; width: 100%; padding: 10px; }
+        #adminControls { display: none; }
     </style>
 </head>
 <body>
@@ -51,18 +58,18 @@
 <div id="passwordModal" class="modal-overlay">
     <div class="modal-content">
         <h2 style="margin:0; font-size: 1.2rem;">Admin Verification</h2>
-        <p style="color: #64748b; font-size: 0.9rem;">Enter PIN for Historical Data</p>
+        <p style="color: #64748b; font-size: 0.9rem;">Enter passcode for Historical Data</p>
         <input type="password" id="adminPasscode" placeholder="••••">
-        <div class="modal-btns">
-            <button style="background:#e2e8f0;" onclick="closeModal()">Cancel</button>
-            <button style="background:var(--primary); color:white;" onclick="submitPin()">Unlock</button>
+        <div style="display:flex; gap:10px;">
+            <button style="flex:1; padding:10px;" onclick="closeModal()">Cancel</button>
+            <button style="flex:1; padding:10px; background:var(--primary); color:white; border:none; border-radius:8px;" onclick="submitPin()">Unlock</button>
         </div>
     </div>
 </div>
 
 <div class="tabs">
     <button class="tab-btn active" id="btn-form" onclick="showTab('form')">ENTRY FORM</button>
-    <button class="tab-btn" id="btn-today" onclick="showTab('db', 'today')">DASHBOARD</button>
+    <button class="tab-btn" id="btn-db" onclick="showTab('db', 'today')">DASHBOARD</button>
     <button class="tab-btn" id="btn-admin" style="color:var(--danger)" onclick="checkAdmin()">🔒 HISTORY</button>
 </div>
 
@@ -89,10 +96,11 @@
             <label>RMS</label><select name="rms"><option value="">Pending</option><option>Done</option></select>
             <label>OSA Morning</label><select name="osaMorning"><option value="">Pending</option><option>Done</option></select>
             <label>EMS Portal</label><select name="emsPortal"><option value="">Pending</option><option>Done</option></select>
-            <label>AI Count Correction (Doc No)</label><input type="text" name="aiCount">
-            <label>JM Count Correction (Doc No)</label><input type="text" name="jmCount">
-            <label>Articles from List (Doc No)</label><input type="text" name="articles">
-            <label>Negative Count Correction (Doc No)</label><input type="text" name="negCount"> <label>F&V Dump (Doc No)</label><input type="text" name="fvDump">
+            <label>AI Count Correction</label><input type="text" name="aiCount">
+            <label>JM Count Correction</label><input type="text" name="jmCount">
+            <label>Articles from List</label><input type="text" name="articles">
+            <label style="color:var(--danger)">Negative Count Correction</label><input type="text" name="negCount">
+            <label>F&V Dump</label><input type="text" name="fvDump">
         </div>
         <div class="section-card">
             <span class="deadline-badge">12 PM</span>
@@ -102,15 +110,15 @@
             <label>JM Order Clearance</label><select name="jmOrder"><option value="">Pending</option><option>Done</option></select>
             <label>BOC Login</label><select name="bocLogin"><option value="">Pending</option><option>Done</option></select>
             <label>DFB Indent</label><select name="dfbIndent"><option value="">Pending</option><option>Done</option></select>
-            <label>PIS (Doc No)</label><input type="text" name="pis">
-            <label>F&V Indent (Doc No)</label><input type="text" name="fvIndent">
+            <label>PIS</label><input type="text" name="pis">
+            <label>F&V Indent</label><input type="text" name="fvIndent">
         </div>
         <div class="section-card">
             <span class="deadline-badge">3 PM - 6 PM</span>
             <h3>Deadline : 3 PM - 6 PM</h3>
             <label>OSA Evening</label><select name="osaEvening"><option value="">Pending</option><option>Done</option></select>
             <label>Near Expiry Check</label><select name="nearExpiry"><option value="">Pending</option><option>Done</option></select>
-            <label>Non F&V Dump (Doc No)</label><input type="text" name="nonFvDump">
+            <label>Non F&V Dump</label><input type="text" name="nonFvDump">
             <label>Daily Self Help</label><input type="text" name="selfHelp">
         </div>
         <div class="section-card">
@@ -120,7 +128,7 @@
             <label>EOD Cash Reco</label><select name="cashReco"><option value="">Pending</option><option>Done</option></select>
         </div>
         <div id="tueGroup" class="section-card" style="display:none; border: 2px solid var(--danger);">
-            <span class="deadline-badge">TUESDAY ONLY</span>
+            <span class="deadline-badge">TUESDAY</span>
             <h3 style="color:var(--danger)">Weekly Inventory (PI)</h3>
             <label>F&V PI</label><input type="text" name="fvPi">
             <label>Crate PI</label><input type="text" name="cratePi">
@@ -135,9 +143,10 @@
         <label style="margin:0; color:var(--danger)">Select History Date:</label>
         <select id="historyDateSelect" onchange="loadDashboard('admin')"></select>
     </div>
+
     <div class="db-controls">
         <div class="filter-group">
-            <label>🎯 Filter & Auto-Sort View</label>
+            <label>🎯 Filter & Sort View</label>
             <select id="statusFilter" onchange="applyFilter()">
                 <option value="all">Full Dashboard (Unsorted)</option>
                 <option value="max_pending">Ranked: Highest Pending (Overall)</option>
@@ -148,8 +157,9 @@
                 <option value="p_tue" id="optTue">Ranked: Tuesday PI Pending</option>
             </select>
         </div>
-        <button id="exportBtn" class="export-btn" onclick="exportLandscapeReport()">📸 EXPORT PNG</button>
+        <button id="exportBtn" class="export-btn" onclick="exportPNG()">📸 EXPORT PNG</button>
     </div>
+
     <div class="table-wrapper">
         <div id="capture-area">
             <h1 id="dbTitle" style="margin:0; font-size:1.5rem;">Operations Performance</h1>
@@ -181,11 +191,9 @@
     };
 
     function showTab(id, mode='today') {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        const activeBtn = mode === 'admin' ? 'btn-admin' : 'btn-' + id;
-        document.getElementById(activeBtn).classList.add('active');
+        document.getElementById('btn-' + (id === 'db' && mode === 'admin' ? 'admin' : id)).classList.add('active');
         if(id === 'db') loadDashboard(mode);
     }
 
@@ -207,7 +215,7 @@
             rawData = await res.json();
             if(rawData.error) { alert(rawData.error); return; }
             render();
-        } catch(e) { body.innerHTML = '<tr><td>Error connecting to Google.</td></tr>'; }
+        } catch(e) { body.innerHTML = '<tr><td>Connection Error.</td></tr>'; }
     }
 
     function applyFilter() { render(); }
@@ -217,15 +225,15 @@
         const headers = rawData;
         const rows = rawData.slice(1);
         const filter = document.getElementById('statusFilter').value;
-        const checkDay = document.getElementById('historyDateSelect').value ? new Date(document.getElementById('historyDateSelect').value).getDay() : new Date().getDay();
-        const isTueDate = checkDay === 2;
+        const selectedDate = document.getElementById('historyDateSelect').value;
+        const isTueDate = (selectedDate ? new Date(selectedDate).getDay() : new Date().getDay()) === 2;
         
         document.getElementById('optTue').style.display = isTueDate ? 'block' : 'none';
 
-        // UPDATED INDICES FOR NEW COLUMN: RMS(2), OSA M(3), EMS(4), AI(5), JM Corr(16), Articles(17), Neg Count(18), FV Dump(6)
+        // Column Mapping (A=0, B=1...)
         const m = { 
             store:, 
-            t10:, 
+            t10:, // Fix: Includes Neg Count (18) and FV Dump (6)
             t12:, 
             t3:, 
             eod:, 
@@ -259,9 +267,7 @@
         if(activeCols.length > 10) {
             gHTML += `<th colspan="8" class="group-header" style="background:#e0f2fe">10 AM</th><th colspan="7" class="group-header" style="background:#fef08a">12 PM</th><th colspan="4" class="group-header" style="background:#ffedd5">3-6 PM</th><th colspan="2" class="group-header" style="background:#e2e8f0">EOD</th>`;
             if(isTueDate) gHTML += `<th colspan="3" class="group-header" style="background:#fee2e2">TUE</th>`;
-        } else {
-            gHTML += `<th colspan="${activeCols.length-1}" class="group-header" style="background:#f1f5f9">FILTERED TARGETS</th>`;
-        }
+        } else { gHTML += `<th colspan="${activeCols.length-1}" class="group-header" style="background:#f1f5f9">FILTERED VIEW</th>`; }
         
         document.getElementById('groupHead').innerHTML = gHTML;
         document.getElementById('masterHead').innerHTML = activeCols.map(i => `<th>${headers[i]}</th>`).join('');
@@ -270,15 +276,15 @@
             let label = filter !== 'all' ? `${r} (${pCount})` : r;
             return `<tr><td><span class="badge badge-id">${label}</span></td>${r.slice(1).map(c => `<td><span class="badge ${isP(c)?'bg-pending':'bg-done'}">${c}</span></td>`).join('')}</tr>`;
         }).join('');
-        document.getElementById('dbDate').innerText = "Update: " + (document.getElementById('historyDateSelect').value || "Today");
+        document.getElementById('dbDate').innerText = "Dashboard Data for: " + (selectedDate || "Today");
     }
 
-    function exportLandscapeReport() {
+    function exportPNG() {
         const area = document.getElementById('capture-area');
         const sticky = document.querySelectorAll('td:first-child, th');
         const old = []; sticky.forEach((el, i) => { old[i] = el.style.position; el.style.position = 'static'; });
         html2canvas(area, { scale: 3 }).then(canvas => {
-            const link = document.createElement('a'); link.download = 'Report.png'; link.href = canvas.toDataURL(); link.click();
+            const link = document.createElement('a'); link.download = 'Store_Report.png'; link.href = canvas.toDataURL(); link.click();
             sticky.forEach((el, i) => el.style.position = old[i]);
         });
     }
