@@ -462,14 +462,14 @@
     btn.disabled = true;
     
     // 1. Lower the scale (e.g., to 2 or 1.5)
-    html2canvas(area, { scale: 3.5, useCORS: true }).then(canvas => {
+    html2canvas(area, { scale: 4, useCORS: true }).then(canvas => {
         const link = document.createElement('a'); 
         
         // 2. Change file extension to .jpg (or .webp)
         link.download = `Report_${new Date().toLocaleDateString()}.jpg`;
         
         // 3. Output as JPEG with a quality setting (e.g., 0.7 for 70% quality)
-        link.href = canvas.toDataURL('image/jpeg', 0.7); 
+        link.href = canvas.toDataURL('image/jpeg', 0.8); 
         
         link.click();
         
