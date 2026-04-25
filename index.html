@@ -55,13 +55,12 @@
             text-decoration: none;
             color: inherit;
         }
-        /* Store name below code */
+        /* Store name below code — inline for html2canvas compatibility */
         .store-name {
-            display: block;
+            display: inline;          /* NOT block, so canvas captures it */
             font-size: 9px;
             font-weight: 400;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
+            letter-spacing: 0.3px;
             color: #64748b;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
@@ -121,7 +120,6 @@
             <label>AI Count Correction (Doc No)</label><input type="text" name="aiCount">
             <label>JM Count Correction (Doc No)</label><input type="text" name="jmCount">
             <label>Articles from List (Doc No)</label><input type="text" name="articles">
-            <!-- 🆕 Negative Count Correction (added after Articles) -->
             <label>Negative Count Correction (Doc No)</label><input type="text" name="negCount">
             <label>F&V Dump (Doc No)</label><input type="text" name="fvDump">
         </div>
@@ -178,7 +176,7 @@
                 <option value="pending_tue" id="tuesdayOption" style="display:none;">Pending: TUESDAY ONLY</option>
             </select>
         </div>
-        <button id="exportBtn" class="export-btn" onclick="exportLandscapeReport()">📸 EXPORT FILTERED REPORT (PNG)</button>
+        <button id="exportBtn" class="export-btn" onclick="exportLandscapeReport()">EXPORT REPORT</button>
     </div>
     <div class="table-wrapper">
         <div id="capture-area">
@@ -429,11 +427,11 @@
             const mobile = storeMobileMap[storeCode];
             const storeName = storeNameMap[storeCode] || '';
             const label = filterVal !== 'all' ? `${storeCode} (${count})` : storeCode;
-            // Build the store name span if name exists
-            const nameSpan = storeName ? `<span class="store-name">${storeName}</span>` : '';
+            // Use <br> + inline span so html2canvas properly captures the store name
+            const nameHTML = storeName ? `<br><span class="store-name">${storeName}</span>` : '';
             const badgeHTML = mobile 
-                ? `<a href="tel:${mobile}" class="badge badge-id" style="text-decoration:none; color:inherit;">${label}${nameSpan}</a>`
-                : `<span class="badge badge-id">${label}${nameSpan}</span>`;
+                ? `<a href="tel:${mobile}" class="badge badge-id" style="text-decoration:none; color:inherit;">${label}${nameHTML}</a>`
+                : `<span class="badge badge-id">${label}${nameHTML}</span>`;
             return `<tr><td>${badgeHTML}</td>${r.slice(1).map(c => `<td><span class="${getCls(c)}">${c}</span></td>`).join('')}</tr>`;
         }).join('');
 
