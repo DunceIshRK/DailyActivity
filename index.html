@@ -55,6 +55,16 @@
             text-decoration: none;
             color: inherit;
         }
+        /* Store name below code */
+        .store-name {
+            display: block;
+            font-size: 9px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            color: #64748b;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
         
         #adminControls { display: none; margin-bottom: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         
@@ -165,7 +175,6 @@
                 <option value="pending_12pm">Pending: 12 PM DEADLINE</option>
                 <option value="pending_3pm">Pending: 3 PM - 6 PM DEADLINE</option>
                 <option value="pending_eod">Pending: EOD DEADLINE</option>
-                <!-- Tuesday option shown only on Tuesdays via JS -->
                 <option value="pending_tue" id="tuesdayOption" style="display:none;">Pending: TUESDAY ONLY</option>
             </select>
         </div>
@@ -190,7 +199,7 @@
     const scriptURL = 'https://script.google.com/macros/s/AKfycbx2syCRMFY4Iu3tyFqsTjd9wxmS_UgBsfOcIjbMAVP3GQFVQET6tgPoV1llPK-SrpiMnA/exec';
     let globalAdminPin = ""; let isAdminAuthorized = false; let currentGlobalData = null;
 
-    // 📞 Store → Mobile number mapping (clickable in dashboard)
+    // 📞 Store → Mobile number mapping
     const storeMobileMap = {
         "TK5T": "6290823675",
         "TM4T": "8013694226",
@@ -216,7 +225,7 @@
         "U2JH": "8910006751",
         "U286": "8100154905",
         "U1WP": "9330906416",
-        "2587": "9432158182",   // additional store not in dropdown (kept for future use)
+        "2587": "9432158182",
         "FRVE": "8777741774",
         "U1L2": "9088456889",
         "U14V": "6291350483",
@@ -228,6 +237,46 @@
         "TNI6": "7278792130",
         "TKM7": "7044093676",
         "U086": "9330314776"
+    };
+
+    // 🏬 Store → Name mapping
+    const storeNameMap = {
+        "TK5T": "Gulshan Colony",
+        "TM4T": "Shalimar Rd",
+        "TM3J": "Vivekananda Park",
+        "TM6O": "Hridaypur",
+        "TM6N": "Salt Lake",
+        "TM4Z": "Shukhobri",
+        "TM6M": "Mullen Stree",
+        "TM5C": "Bonhoghly",
+        "TN1C": "Thakurpukur",
+        "TN1B": "Lake Mall",
+        "T3GC": "Sealdah",
+        "TM8T": "Urbana",
+        "T9T7": "Newtown Tecn",
+        "TBAE": "Sarsona",
+        "TN1T": "Taratala",
+        "T9W3": "Cossipore",
+        "T9T3": "Dankuni",
+        "T9H8": "Batanagar",
+        "T9V5": "Bagmari",
+        "U949": "Chinsurah",
+        "U1WR": "PRASANTIKA APT LA",
+        "U2JH": "Modern Market",
+        "U286": "Liluah",
+        "U1WP": "Dunlop",
+        "2587": "Bangur Avenue",
+        "FRVE": "EASY DAY-KOLKATA-SAD",
+        "U1L2": "Puratan Bazaar",
+        "U14V": "Sonnet Sonar Apar",
+        "3035": "Budgebudge",
+        "3087": "Netaji Nagar",
+        "F1ZP": "EASYDAY GARDEN REACH",
+        "2314": "Jodhpur Park",
+        "U1OW": "RN Mukherjee Road",
+        "TNI6": "Megh Bristhi",
+        "TKM7": "Sushma Apt Baguihati",
+        "U086": "New Barrackpur"
     };
 
     window.onload = () => { 
@@ -376,13 +425,15 @@
         document.getElementById('masterHead').innerHTML = activeIndices.map(i => `<th>${headers[i]}</th>`).join('');
         document.getElementById('masterBody').innerHTML = finalRows.map(r => {
             const count = r.filter(isP).length;
-            const storeCode = r[0];                                   // pure store code
-            const mobile = storeMobileMap[storeCode];                // may be undefined
+            const storeCode = r[0];
+            const mobile = storeMobileMap[storeCode];
+            const storeName = storeNameMap[storeCode] || '';
             const label = filterVal !== 'all' ? `${storeCode} (${count})` : storeCode;
-            // Create anchor if mobile exists, else fallback to span (same badge look)
+            // Build the store name span if name exists
+            const nameSpan = storeName ? `<span class="store-name">${storeName}</span>` : '';
             const badgeHTML = mobile 
-                ? `<a href="tel:${mobile}" class="badge badge-id" style="text-decoration:none; color:inherit;">${label}</a>`
-                : `<span class="badge badge-id">${label}</span>`;
+                ? `<a href="tel:${mobile}" class="badge badge-id" style="text-decoration:none; color:inherit;">${label}${nameSpan}</a>`
+                : `<span class="badge badge-id">${label}${nameSpan}</span>`;
             return `<tr><td>${badgeHTML}</td>${r.slice(1).map(c => `<td><span class="${getCls(c)}">${c}</span></td>`).join('')}</tr>`;
         }).join('');
 
