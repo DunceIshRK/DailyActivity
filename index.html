@@ -458,7 +458,7 @@
             const link = document.createElement('a'); link.download = `Report_${new Date().toLocaleDateString()}.png`;
             link.href = canvas.toDataURL(); link.click();
             sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
-            btn.innerText = "📸 EXPORT FILTERED REPORT (PNG)"; btn.disabled = false;
+            btn.innerText = "EXPORT REPORT"; btn.disabled = false;
         });
     }
 
