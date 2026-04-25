@@ -447,18 +447,38 @@
     }
 
     function exportLandscapeReport() {
-        const area = document.getElementById('capture-area');
-        const btn = document.getElementById('exportBtn');
-        const sticky = document.querySelectorAll('td:first-child, th');
-        const old = []; sticky.forEach((el, i) => { old[i] = el.style.position; el.style.position = 'static'; });
-        btn.innerText = "SAVING..."; btn.disabled = true;
-        html2canvas(area, { scale: 4, useCORS: true }).then(canvas => {
-            const link = document.createElement('a'); link.download = `Report_${new Date().toLocaleDateString()}.png`;
-            link.href = canvas.toDataURL(); link.click();
-            sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
-            btn.innerText = "EXPORT REPORT"; btn.disabled = false;
-        });
-    }
+    const area = document.getElementById('capture-area');
+    const btn = document.getElementById('exportBtn');
+    const sticky = document.querySelectorAll('td:first-child, th');
+    
+    // Temporarily remove sticky positioning
+    const old = []; 
+    sticky.forEach((el, i) => { 
+        old[i] = el.style.position; 
+        el.style.position = 'static'; 
+    });
+    
+    btn.innerText = "SAVING..."; 
+    btn.disabled = true;
+    
+    // 1. Lower the scale (e.g., to 2 or 1.5)
+    html2canvas(area, { scale: 3.5, useCORS: true }).then(canvas => {
+        const link = document.createElement('a'); 
+        
+        // 2. Change file extension to .jpg (or .webp)
+        link.download = `Report_${new Date().toLocaleDateString()}.jpg`;
+        
+        // 3. Output as JPEG with a quality setting (e.g., 0.7 for 70% quality)
+        link.href = canvas.toDataURL('image/jpeg', 0.7); 
+        
+        link.click();
+        
+        // Restore sticky positioning
+        sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
+        btn.innerText = "EXPORT REPORT"; 
+        btn.disabled = false;
+    });
+}
 
     document.getElementById('storeForm').addEventListener('submit', e => {
         e.preventDefault();
