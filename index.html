@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; }
+        :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --success: #166534; --danger: #991b1b; --whatsapp: #075e54; --info: #0284c7; }
         * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
         
-        /* Tabs */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; position: sticky; top: 0; z-index: 100; background: var(--bg); padding-bottom: 10px; }
+        .tab-btn { flex: 1; min-width: 150px; padding: 12px; border: none; border-radius: 10px; background: #e2e8f0; font-weight: bold; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
         .tab-content { display: none; max-width: 100%; margin: auto; }
         .tab-content.active { display: block; }
-        /* Cards & Form */
         .section-card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         h3 { margin: 0 0 15px 0; color: var(--primary); font-size: 1rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
         .deadline-badge { background: #fee2e2; color: #991b1b; font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; float: right; font-weight: bold; }
@@ -23,51 +21,42 @@
         input, select { width: 100%; padding: 14px; margin-top: 6px; border: 1.5px solid #cbd5e1; border-radius: 10px; box-sizing: border-box; font-size: 16px; background: #fff; }
         button#submitBtn { width: 50%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: bold; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2); display: block; margin: 0 auto; }
         
-        /* Dashboard Header Controls */
-        .db-controls { display: flex; gap: 15px; margin-bottom: 15px; align-items: flex-end; flex-wrap: wrap; }
+        .db-controls { display: flex; gap: 10px; margin-bottom: 15px; align-items: flex-end; flex-wrap: wrap; }
         .export-btn { flex: 2; padding: 16px; background: var(--whatsapp); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: all 0.2s;}
-        .filter-group { flex: 1; min-width: 250px; }
-        .filter-group label { margin-top: 0; margin-bottom: 5px; font-size: 0.8rem; text-transform: uppercase; color: #64748b; }
-        .filter-group select { padding: 14px; background: white; border: 2px solid var(--primary); color: var(--primary); font-weight: bold; }
-        /* Table UI */
-        #capture-area { padding: 30px; background: white; border-radius: 20px; width: fit-content; }
+        .refresh-btn { flex: 1; padding: 16px; background: var(--info); color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; transition: all 0.2s; min-width: 150px; }
+        .filter-group { flex: 2; min-width: 250px; }
+        .filter-group label { margin-top: 0; margin-bottom: 5px; font-size: 0.8rem; text-transform: uppercase; color: #64748b; display: block; }
+        .filter-group select { padding: 14px; background: white; border: 2px solid var(--primary); color: var(--primary); font-weight: bold; width: 100%; margin: 0; }
+        
+        #capture-area, #perf-capture-area { padding: 30px; background: white; border-radius: 20px; width: fit-content; }
         .table-wrapper { overflow: auto; max-height: 75vh; background: white; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
         table { border-collapse: separate; border-spacing: 0; font-size: 12px; line-height: 1.5; } 
         th { background: #f1f5f9; padding: 14px 12px; text-align: left; border-bottom: 2.5px solid #e2e8f0; white-space: nowrap; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 800; }
         td { padding: 12px; border-bottom: 1px solid #f1f5f9; white-space: nowrap; border-right: 1px solid #f1f5f9; background: white; }
         
-        /* Monospace Store Column */
-        td:first-child { position: sticky; left: 0; z-index: 5; border-right: 3px solid #e2e8f0; }
+        td:first-child { position: sticky; left: 0; z-index: 5; border-right: 3px solid #e2e8f0; background: white; }
         td:first-child .badge { font-size: 14px; padding: 8px 12px; letter-spacing: 2px; font-family: "Consolas", "SF Mono", "Monaco", monospace; }
-        /* Sticky Headers */
+        
         #groupHead th { position: sticky; top: 0; z-index: 10; height: 42px; box-sizing: border-box; }
         #masterHead th { position: sticky; top: 42px; z-index: 9; height: 48px; box-sizing: border-box; background: #f1f5f9; }
         #groupHead th:first-child { position: sticky; left: 0; top: 0; z-index: 12; background: white; border-right: 3px solid #e2e8f0; }
         #masterHead th:first-child { position: sticky; left: 0; top: 42px; z-index: 11; background: #f1f5f9; border-right: 3px solid #e2e8f0; }
         .group-header { text-align: center; font-size: 13px; font-weight: 900; letter-spacing: 1px; border-bottom: 3px solid white !important; border-right: 2px solid white; padding: 10px !important; }
-        /* Badge Styling */
-        .badge { padding: 6px 10px; border-radius: 8px; font-weight: 800; font-size: 10px; display: inline-block; letter-spacing: 0.5px; }
-        .bg-done { background: #dcfce7; color: var(--success); border: 1px solid #bbf7d0; }
-        .bg-pending { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; }
-        .badge-id { background: #eff6ff; color: var(--primary); border: 1px solid #dbeafe; }
-        /* Make tel links look like badges */
-        a.badge-id, a.badge {
-            text-decoration: none;
-            color: inherit;
-        }
-        /* Store name below code — inline for html2canvas compatibility */
-        .store-name {
-            display: inline;          /* NOT block, so canvas captures it */
-            font-size: 9px;
-            font-weight: 400;
-            letter-spacing: 0.3px;
-            color: #64748b;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
         
+        .badge { padding: 6px 10px; border-radius: 8px; font-weight: 800; font-size: 10px; display: inline-block; letter-spacing: 0.5px; }
+        .bg-done { background: #dcfce7 !important; color: var(--success); border: 1px solid #bbf7d0; }
+        .bg-pending { background: #fee2e2 !important; color: var(--danger); border: 1px solid #fecaca; }
+        .badge-id { background: #eff6ff; color: var(--primary); border: 1px solid #dbeafe; }
+        a.badge-id, a.badge { text-decoration: none; color: inherit; }
+        .store-name { display: inline; font-size: 9px; font-weight: 400; letter-spacing: 0.3px; color: #64748b; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
+        /* Performance Table Specific Sticky Styles */
+        .perf-table th { position: sticky; top: 0; z-index: 9; background: #f8fafc; padding: 12px 10px; text-align: center; font-size: 13px; }
+        .perf-table th:first-child { position: sticky; left: 0; top: 0; z-index: 11; background: white; border-right: 3px solid #e2e8f0; }
+        .perf-table td { padding: 10px; text-align: center; }
+
         #adminControls { display: none; margin-bottom: 20px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         
-        /* Modal */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 25px; border-radius: 12px; width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .modal-content input { width: 100%; padding: 12px; margin: 15px 0; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box; text-align: center; letter-spacing: 4px; font-family: monospace; }
@@ -89,11 +78,14 @@
         </div>
     </div>
 </div>
+
 <div class="tabs">
     <button class="tab-btn active" id="btn-form" onclick="showTab('form')">ENTRY FORM</button>
     <button class="tab-btn" id="btn-today" onclick="showTab('db', 'today')">TODAY'S DASHBOARD</button>
-    <button class="tab-btn" id="btn-admin" style="background-color: #f1f5f9; color: var(--danger);" onclick="checkAccessAndShow()">🔒 HISTORICAL (ADMIN)</button>
+    <button class="tab-btn" id="btn-perf" onclick="showTab('perf')">15-DAY PERFORMANCE</button>
+    <button class="tab-btn" id="btn-admin" style="background-color: #f1f5f9; color: var(--danger);" onclick="checkAccessAndShow()">🔒 HISTORICAL</button>
 </div>
+
 <div id="form" class="tab-content active">
     <form id="storeForm">
         <div class="section-card">
@@ -111,6 +103,7 @@
                 <option>U086</option><option>U1OW</option><option>TKM7</option>
             </select>
         </div>
+
         <div class="section-card">
             <span class="deadline-badge">10 AM</span>
             <h3>Deadline : 10 AM</h3>
@@ -123,6 +116,7 @@
             <label>Negative Count Correction (Doc No)</label><input type="text" name="negCount">
             <label>F&V Dump (Doc No)</label><input type="text" name="fvDump">
         </div>
+
         <div class="section-card">
             <span class="deadline-badge">12 PM</span>
             <h3>Deadline : 12 PM</h3>
@@ -133,13 +127,13 @@
             <label>DFB Indent</label><select name="dfbIndent"><option value="">Pending</option><option>Done</option></select>
             <label>PIS (Doc No)</label><input type="text" name="pis">
             <label>F&V Indent (Doc No)</label><input type="text" name="fvIndent">
-            <!-- NEW: SM Checklist -->
             <label>SM Checklist</label>
             <select name="smChecklist">
                 <option value="">Pending</option>
                 <option>Done</option>
             </select>
         </div>
+
         <div class="section-card">
             <span class="deadline-badge">3 PM - 6 PM</span>
             <h3>Deadline : 3 PM - 6 PM</h3>
@@ -147,16 +141,17 @@
             <label>Near Expiry Check</label><select name="nearExpiry"><option value="">Pending</option><option>Done</option></select>
             <label>Non F&V Dump (Doc No)</label><input type="text" name="nonFvDump">
             <label>Daily Self Help (Enter no of Bays)</label><input type="text" name="selfHelp">
-            <!-- NEW: Open Customer Complaints -->
             <label>Open Customer Complaints (Count)</label>
-            <input type="number" name="openComplaints" min="0" step="1">
+            <input type="number" name="openComplaints" min="0" step="1" placeholder="0">
         </div>
+
         <div class="section-card">
             <span class="deadline-badge">EOD</span>
             <h3>Deadline : EOD</h3>
             <label>Pending GRN</label><select name="pendingGrn"><option value="">Pending</option><option>Done</option></select>
             <label>EOD Cash Reco</label><select name="cashReco"><option value="">Pending</option><option>Done</option></select>
         </div>
+
         <div id="tueGroup" class="section-card" style="display:none; border: 2.5px solid var(--danger);">
             <span class="deadline-badge">TUESDAY ONLY</span>
             <h3 style="color:var(--danger)">Weekly Inventory (PI)</h3>
@@ -164,17 +159,20 @@
             <label>Crate PI (Posting Doc No)</label><input type="text" name="cratePi">
             <label>Consumable PI (Posting Doc No)</label><input type="text" name="consumablePi">
         </div>
+
         <button type="submit" id="submitBtn">SUBMIT ACTIVITIES</button>
     </form>
-</div> 
+</div>
+
 <div id="db" class="tab-content">
     <div id="adminControls">
         <label style="margin-top:0; display:inline-block; font-size: 1rem; color: var(--danger);"><strong>Select Historical Date:</strong></label>
         <select id="historyDateSelect" onchange="loadDashboard('admin')"></select>
     </div>
+
     <div class="db-controls">
         <div class="filter-group">
-            <label>🎯 Filter & Sort Dashboard</label>
+            <label>🎯 Filter Dashboard</label>
             <select id="statusFilter" onchange="applyUIfilter()">
                 <option value="all">Full Dashboard (Show All)</option>
                 <option value="max_pending">Maximum Pending (Sort Max to Min)</option>
@@ -185,15 +183,17 @@
                 <option value="pending_tue" id="tuesdayOption" style="display:none;">Pending: TUESDAY ONLY</option>
             </select>
         </div>
+        <button onclick="forceRefresh()" class="refresh-btn" id="refreshDbBtn">🔄 REFRESH DATA</button>
         <button id="exportBtn" class="export-btn" onclick="exportLandscapeReport()">EXPORT REPORT</button>
     </div>
+
     <div class="table-wrapper">
         <div id="capture-area">
             <h1 id="reportTitle" style="margin: 0 0 5px 0; color: #1e293b; font-size: 1.6rem;">Store Operations Performance</h1>
             <p id="subTitle" style="margin-top: 0; color: #64748b; font-weight: 600;">Full System Landscape View</p>
             <table>
                 <thead>
-                    <tr id="groupHead"></tr> 
+                    <tr id="groupHead"></tr>
                     <tr id="masterHead"></tr>
                 </thead>
                 <tbody id="masterBody"></tbody>
@@ -202,193 +202,256 @@
         </div>
     </div>
 </div>
+
+<div id="perf" class="tab-content">
+    <div class="db-controls" style="justify-content: flex-end;">
+        <button onclick="forceRefresh()" class="refresh-btn" id="refreshPerfBtn">🔄 REFRESH DATA</button>
+        <button id="exportPerfBtn" class="export-btn" style="max-width: 250px;" onclick="exportPerformanceReport()">EXPORT MATRIX</button>
+    </div>
+    <div class="table-wrapper">
+        <div id="perf-capture-area">
+            <h1 style="margin: 0 0 5px 0; color: #1e293b; font-size: 1.6rem;">15-Day Performance Matrix</h1>
+            <p style="margin-top: 0; color: #64748b; font-weight: 600;">Completed tasks vs Pending tasks per day</p>
+            <table class="perf-table">
+                <thead>
+                    <tr id="perfHead"></tr>
+                </thead>
+                <tbody id="perfBody"></tbody>
+            </table>
+            <p id="perfExportTime" style="font-size: 12px; color:#94a3b8; margin-top: 20px; font-weight: bold;"></p>
+        </div>
+    </div>
+</div>
+
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzFNrq-HvNdbV20Y-2tJQ11NNSHwXmFxfHfDWV9CwSeeHwg58PfmFam40jaJKEuacy8wg/exec';
-    let globalAdminPin = ""; let isAdminAuthorized = false; let currentGlobalData = null;
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzFNrq-HvNdbV20Y-2tJQ11NNSHwXmFxfHfDWV9CwSeeHwg58PfmFam40jaJKEuacy8wg/exec'; // 🔗 REPLACE WITH YOUR DEPLOYMENT URL
+    let globalAdminPin = ""; 
+    let isAdminAuthorized = false; 
+    let currentGlobalData = null;
 
-    // 📞 Store → Mobile number mapping
+    // --- FRONTEND CACHE MEMORY --- //
+    const appCache = {
+        today: null,
+        perf: null,
+        admin: {} 
+    };
+
     const storeMobileMap = {
-        "TK5T": "6290823675",
-        "TM4T": "8013694226",
-        "TM3J": "9830700743",
-        "TM6O": "9641498016",
-        "TM6N": "9399021432",
-        "TM4Z": "9091909166",
-        "TM6M": "9576081621",
-        "TM5C": "9123849664",
-        "TN1C": "8584084421",
-        "TN1B": "7003264912",
-        "T3GC": "9614726660",
-        "TM8T": "8918894749",
-        "T9T7": "8240090853",
-        "TBAE": "6289125596",
-        "TN1T": "9836082600",
-        "T9W3": "8981316403",
-        "T9T3": "9800564852",
-        "T9H8": "6291857226",
-        "T9V5": "8777735431",
-        "U949": "9163971138",
-        "U1WR": "8100856476",
-        "U2JH": "8910006751",
-        "U286": "8100154905",
-        "U1WP": "9330906416",
-        "2587": "9432158182",
-        "FRVE": "8777741774",
-        "U1L2": "9088456889",
-        "U14V": "6291350483",
-        "3035": "9330905971",
-        "3087": "6291803170",
-        "F1ZP": "9903479874",
-        "2314": "9330315100",
-        "U1OW": "8638312600",
-        "TNI6": "7278792130",
-        "TKM7": "7044093676",
-        "U086": "9330314776"
+        "TK5T": "6290823675", "TM4T": "8013694226", "TM3J": "9830700743", "TM6O": "9641498016",
+        "TM6N": "9399021432", "TM4Z": "9091909166", "TM6M": "9576081621", "TM5C": "9123849664",
+        "TN1C": "8584084421", "TN1B": "7003264912", "T3GC": "9614726660", "TM8T": "8918894749",
+        "T9T7": "8240090853", "TBAE": "6289125596", "TN1T": "9836082600", "T9W3": "8981316403",
+        "T9T3": "9800564852", "T9H8": "6291857226", "T9V5": "8777735431", "U949": "9163971138",
+        "U1WR": "8100856476", "U2JH": "8910006751", "U286": "8100154905", "U1WP": "9330906416",
+        "2587": "9432158182", "FRVE": "8777741774", "U1L2": "9088456889", "U14V": "6291350483",
+        "3035": "9330905971", "3087": "6291803170", "F1ZP": "9903479874", "2314": "9330315100",
+        "U1OW": "8638312600", "TNI6": "7278792130", "TKM7": "7044093676", "U086": "9330314776"
     };
 
-    // 🏬 Store → Name mapping
     const storeNameMap = {
-        "TK5T": "Gulshan Colony",
-        "TM4T": "Shalimar Rd",
-        "TM3J": "Vivekananda Park",
-        "TM6O": "Hridaypur",
-        "TM6N": "Salt Lake",
-        "TM4Z": "Shukhobri",
-        "TM6M": "Mullen Stree",
-        "TM5C": "Bonhoghly",
-        "TN1C": "Thakurpukur",
-        "TN1B": "Lake Mall",
-        "T3GC": "Sealdah",
-        "TM8T": "Urbana",
-        "T9T7": "Newtown Tecn",
-        "TBAE": "Sarsona",
-        "TN1T": "Taratala",
-        "T9W3": "Cossipore",
-        "T9T3": "Dankuni",
-        "T9H8": "Batanagar",
-        "T9V5": "Bagmari",
-        "U949": "Chinsurah",
-        "U1WR": "Prasantika Apt",
-        "U2JH": "Modern Market",
-        "U286": "Liluah",
-        "U1WP": "Dunlop",
-        "2587": "Bangur Avenue",
-        "FRVE": "Sadar Bazar",
-        "U1L2": "Puratan Bazaar",
-        "U14V": "Sonnet Sonar Apar",
-        "3035": "Budgebudge",
-        "3087": "Netaji Nagar",
-        "F1ZP": "Garden Reach",
-        "2314": "Jodhpur Park",
-        "U1OW": "RN Mukherjee Road",
-        "TNI6": "Megh Bristhi",
-        "TKM7": "Sushma Apt Baguihati",
-        "U086": "New Barrackpur"
+        "TK5T": "Gulshan Colony", "TM4T": "Shalimar Rd", "TM3J": "Vivekananda Park",
+        "TM6O": "Hridaypur", "TM6N": "Salt Lake", "TM4Z": "Shukhobri", "TM6M": "Mullen Stree",
+        "TM5C": "Bonhoghly", "TN1C": "Thakurpukur", "TN1B": "Lake Mall", "T3GC": "Sealdah",
+        "TM8T": "Urbana", "T9T7": "Newtown Tecn", "TBAE": "Sarsona", "TN1T": "Taratala",
+        "T9W3": "Cossipore", "T9T3": "Dankuni", "T9H8": "Batanagar", "T9V5": "Bagmari",
+        "U949": "Chinsurah", "U1WR": "Prasantika Apt", "U2JH": "Modern Market", "U286": "Liluah",
+        "U1WP": "Dunlop", "2587": "Bangur Avenue", "FRVE": "Sadar Bazar", "U1L2": "Puratan Bazaar",
+        "U14V": "Sonnet Sonar Apar", "3035": "Budgebudge", "3087": "Netaji Nagar",
+        "F1ZP": "Garden Reach", "2314": "Jodhpur Park", "U1OW": "RN Mukherjee Road",
+        "TNI6": "Megh Bristhi", "TKM7": "Sushma Apt Baguihati", "U086": "New Barrackpur"
     };
 
-    window.onload = () => { 
+    window.onload = () => {
         const isTuesday = new Date().getDay() === 2;
-        if (isTuesday) document.getElementById('tueGroup').style.display = 'block'; 
+        if (isTuesday) document.getElementById('tueGroup').style.display = 'block';
         document.getElementById('tuesdayOption').style.display = isTuesday ? '' : 'none';
 
         const select = document.getElementById('historyDateSelect');
         for (let i = 1; i <= 15; i++) {
             let d = new Date(); d.setDate(d.getDate() - i);
             let mm = String(d.getMonth() + 1).padStart(2, '0'); let dd = String(d.getDate()).padStart(2, '0');
-            let opt = document.createElement('option'); opt.value = `${d.getFullYear()}-${mm}-${dd}`; 
+            let opt = document.createElement('option'); opt.value = `${d.getFullYear()}-${mm}-${dd}`;
             opt.text = d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
             select.appendChild(opt);
         }
     };
 
+    function forceRefresh() {
+        // Clear all cached memory
+        appCache.today = null;
+        appCache.perf = null;
+        appCache.admin = {};
+        
+        // Reload currently active tab
+        if (document.getElementById('db').classList.contains('active')) {
+            const isViewAdmin = document.getElementById('adminControls').style.display === 'block';
+            loadDashboard(isViewAdmin ? 'admin' : 'today');
+        } else if (document.getElementById('perf').classList.contains('active')) {
+            loadPerformance();
+        }
+    }
+
     function checkAccessAndShow() {
         if (!isAdminAuthorized) {
             document.getElementById('passwordModal').style.display = 'flex';
-            document.getElementById('adminPasscode').value = ''; document.getElementById('adminPasscode').focus();
-        } else { showTab('db', 'admin'); }
+            document.getElementById('adminPasscode').value = '';
+            document.getElementById('adminPasscode').focus();
+        } else {
+            showTab('db', 'admin');
+        }
     }
+
     function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
+
     function submitPassword() {
         const passcode = document.getElementById('adminPasscode').value;
-        if (passcode) { globalAdminPin = passcode; isAdminAuthorized = true; closePasswordModal(); showTab('db', 'admin'); }
+        if (passcode) {
+            globalAdminPin = passcode;
+            isAdminAuthorized = true;
+            closePasswordModal();
+            showTab('db', 'admin');
+        }
     }
-    document.getElementById('adminPasscode').addEventListener('keypress', (e) => { if (e.key === 'Enter') submitPassword(); });
+
+    document.getElementById('adminPasscode').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') submitPassword();
+    });
 
     function showTab(id, viewMode = 'today') {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        
         if (id === 'form') document.getElementById('btn-form').classList.add('active');
         if (id === 'db' && viewMode === 'today') document.getElementById('btn-today').classList.add('active');
         if (id === 'db' && viewMode === 'admin') document.getElementById('btn-admin').classList.add('active');
-        if(id === 'db') loadDashboard(viewMode);
+        if (id === 'perf') document.getElementById('btn-perf').classList.add('active');
+        
+        if (id === 'db') loadDashboard(viewMode);
+        if (id === 'perf') loadPerformance();
     }
 
+    // --- DASHBOARD RENDERING --- //
     async function loadDashboard(viewMode) {
         const tbody = document.getElementById('masterBody');
         const adminControls = document.getElementById('adminControls');
         const exportBtn = document.getElementById('exportBtn');
+        const refreshBtn = document.getElementById('refreshDbBtn');
+        
         document.getElementById('statusFilter').value = 'all';
-        exportBtn.disabled = true; exportBtn.innerText = "⏳ LOADING DATA...";
+        exportBtn.disabled = true; refreshBtn.disabled = true;
+        refreshBtn.innerText = "⏳ Fetching...";
+        exportBtn.innerText = "⏳ LOADING...";
+
         let fetchURL = scriptURL + "?view=" + viewMode;
         let targetDateObj = new Date();
+        let selectedStr = "";
+
         if (viewMode === 'admin') {
             adminControls.style.display = 'block';
-            const selectedStr = document.getElementById('historyDateSelect').value;
+            selectedStr = document.getElementById('historyDateSelect').value;
             fetchURL += `&pin=${encodeURIComponent(globalAdminPin)}&date=${selectedStr}`;
-            const [y, m, d] = selectedStr.split('-'); targetDateObj = new Date(y, m - 1, d); 
-        } else { adminControls.style.display = 'none'; }
-        tbody.innerHTML = '<tr><td colspan="30" style="text-align:center; padding: 20px;">Fetching logs from Google...</td></tr>';
+            const [y, m, d] = selectedStr.split('-'); targetDateObj = new Date(y, m - 1, d);
+            
+            // Check Frontend Cache FIRST
+            if (appCache.admin[selectedStr]) {
+                currentGlobalData = appCache.admin[selectedStr];
+                renderTable(targetDateObj);
+                resetButtons(refreshBtn, exportBtn);
+                return; // EXIT EARLY - INSTANT LOAD
+            }
+        } else {
+            adminControls.style.display = 'none';
+            // Check Frontend Cache FIRST
+            if (appCache.today) {
+                currentGlobalData = appCache.today;
+                renderTable(targetDateObj);
+                resetButtons(refreshBtn, exportBtn);
+                return; // EXIT EARLY - INSTANT LOAD
+            }
+        }
+
+        tbody.innerHTML = '<tr><td colspan="25" style="text-align:center; padding: 20px;">Fetching logs from Google...</td></tr>';
+
         try {
             const res = await fetch(fetchURL);
             currentGlobalData = await res.json();
-            if (currentGlobalData.error) { isAdminAuthorized = false; alert("❌ " + currentGlobalData.error); return; }
+            
+            if (currentGlobalData.error) {
+                isAdminAuthorized = false;
+                alert("❌ " + currentGlobalData.error);
+                resetButtons(refreshBtn, exportBtn);
+                return;
+            }
+
+            // SAVE TO CACHE FOR NEXT TIME
+            if (viewMode === 'admin') {
+                appCache.admin[selectedStr] = currentGlobalData;
+            } else {
+                appCache.today = currentGlobalData;
+            }
+
             renderTable(targetDateObj);
-        } catch(e) { tbody.innerHTML = '<tr><td>Connection Error.</td></tr>'; }
+        } catch(e) {
+            tbody.innerHTML = '<tr><td colspan="25" style="text-align:center; padding: 20px;">Connection Error.</td></tr>';
+        }
+        resetButtons(refreshBtn, exportBtn);
+    }
+
+    function resetButtons(refBtn, expBtn) {
+        refBtn.disabled = false; refBtn.innerText = "🔄 REFRESH DATA";
+        expBtn.disabled = false; expBtn.innerText = "EXPORT REPORT";
     }
 
     function applyUIfilter() {
         if(!currentGlobalData) return;
         let dateObj = new Date();
         if(document.getElementById('adminControls').style.display === 'block') {
-            const [y, m, d] = document.getElementById('historyDateSelect').value.split('-'); dateObj = new Date(y, m - 1, d);
+            const [y, m, d] = document.getElementById('historyDateSelect').value.split('-');
+            dateObj = new Date(y, m - 1, d);
         }
         renderTable(dateObj);
     }
 
     function renderTable(targetDateObj) {
         const headers = currentGlobalData[0];
-        const rows = currentGlobalData.slice(1); 
+        const rows = currentGlobalData.slice(1);
         const isTargetTuesday = targetDateObj.getDay() === 2;
         const filterVal = document.getElementById('statusFilter').value;
         const allStores = Array.from(document.getElementById('storeDropdown').options).map(opt => opt.value).filter(val => val !== "");
-        
+
         let storeDataMap = {};
-        allStores.forEach(store => { 
-            storeDataMap[store] = new Array(headers.length).fill("❌ Pending"); 
-            storeDataMap[store][1] = store; 
+        allStores.forEach(store => {
+            storeDataMap[store] = new Array(headers.length).fill("❌ Pending");
+            storeDataMap[store][1] = store;
         });
+
         rows.forEach(row => {
-            const store = row[1]; if (!store) return;
-            if (!storeDataMap[store]) { storeDataMap[store] = new Array(headers.length).fill("❌ Pending"); storeDataMap[store][1] = store; }
+            const store = row[1];
+            if (!store) return;
+            if (!storeDataMap[store]) {
+                storeDataMap[store] = new Array(headers.length).fill("❌ Pending");
+                storeDataMap[store][1] = store;
+            }
             for (let i = 2; i < headers.length; i++) {
-                if (row[i] !== undefined && row[i] !== "" && String(row[i]).trim() !== "") storeDataMap[store][i] = row[i];
+                if (row[i] !== undefined && row[i] !== "" && String(row[i]).trim() !== "") {
+                    storeDataMap[store][i] = row[i];
+                }
             }
         });
 
-        // UPDATED COLUMN INDICES (0-based) – reflects new SM Checklist & Open Customer Complaints
         const idxStore = [1];
-        const idx10am = [2, 3, 4, 5, 17, 18, 19, 6];      // 8 columns
-        const idx12pm = [7, 8, 9, 10, 11, 12, 13, 14];     // 8 columns (now includes SM Checklist)
-        const idx3pm  = [15, 16, 20, 21, 22];              // 5 columns (added Open Complaints)
-        const idxEod  = [23, 24];                           // 2 columns
-        const idxTue  = [25, 26, 27];                       // 3 columns
+        const idx10am = [2, 3, 4, 5, 17, 18, 19, 6];   
+        const idx12pm = [7, 8, 9, 10, 11, 12, 13, 14];
+        const idx3pm  = [15, 16, 20, 21, 22];
+        const idxEod  = [23, 24];
+        const idxTue  = [25, 26, 27];
 
         let activeIndices = [...idxStore];
         if (['all', 'max_pending'].includes(filterVal)) {
             activeIndices = activeIndices.concat(idx10am, idx12pm, idx3pm, idxEod);
             if (isTargetTuesday) activeIndices = activeIndices.concat(idxTue);
-        } 
+        }
         else if (filterVal === 'pending_10am') activeIndices = activeIndices.concat(idx10am);
         else if (filterVal === 'pending_12pm') activeIndices = activeIndices.concat(idx12pm);
         else if (filterVal === 'pending_3pm') activeIndices = activeIndices.concat(idx3pm);
@@ -401,9 +464,10 @@
             const row = storeDataMap[store];
             return activeIndices.map(i => {
                 let val = row[i];
-                // FIX: allow numeric 0 as a valid (non-pending) value
                 let displayVal = (val === undefined || val === null || String(val).trim() === '' || val === "❌ Pending") ? "❌ Pending" : val;
-                if (String(headers[i]).includes("(Tue)")) displayVal = isTargetTuesday ? displayVal : "—";
+                if (String(headers[i]).includes("(Tue)")) {
+                    displayVal = isTargetTuesday ? displayVal : "—";
+                }
                 return displayVal;
             });
         });
@@ -412,23 +476,24 @@
         else if (filterVal === 'max_pending') {
             finalRows.sort((a, b) => b.filter(isP).length - a.filter(isP).length);
         } else {
-            finalRows = finalRows
-                .filter(row => row.slice(1).some(isP))
-                .sort((a, b) => b.filter(isP).length - a.filter(isP).length);
+            finalRows = finalRows.filter(row => row.slice(1).some(isP))
+                                 .sort((a, b) => b.filter(isP).length - a.filter(isP).length);
         }
 
         let groupHTML = `<th class="group-header" style="background: white;"></th>`;
         if (['all', 'max_pending'].includes(filterVal)) {
-            groupHTML += `<th colspan="8" class="group-header" style="background: #e0f2fe; color: #0369a1;">10 AM</th>
-                          <th colspan="8" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM</th>
-                          <th colspan="5" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM</th>
-                          <th colspan="2" class="group-header" style="background: #e2e8f0; color: #334155;">EOD</th>`;
-            if (isTargetTuesday) groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE</th>`;
-        } else if (filterVal === 'pending_10am') groupHTML += `<th colspan="8" class="group-header" style="background: #e0f2fe; color: #0369a1;">10 AM PENDING</th>`;
-        else if (filterVal === 'pending_12pm') groupHTML += `<th colspan="8" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM PENDING</th>`;
-        else if (filterVal === 'pending_3pm') groupHTML += `<th colspan="5" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM PENDING</th>`;
-        else if (filterVal === 'pending_eod') groupHTML += `<th colspan="2" class="group-header" style="background: #e2e8f0; color: #334155;">EOD PENDING</th>`;
-        else if (filterVal === 'pending_tue') groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE PENDING</th>`;
+            groupHTML += `<th colspan="8" class="group-header" style="background: #e0f2fe; color: #0369a1;">10 AM</th>`;
+            groupHTML += `<th colspan="8" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM</th>`;
+            groupHTML += `<th colspan="5" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM</th>`;
+            groupHTML += `<th colspan="2" class="group-header" style="background: #e2e8f0; color: #334155;">EOD</th>`;
+            if (isTargetTuesday) {
+                groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE</th>`;
+            }
+        } else if (filterVal === 'pending_10am') { groupHTML += `<th colspan="8" class="group-header" style="background: #e0f2fe; color: #0369a1;">10 AM PENDING</th>`; }
+        else if (filterVal === 'pending_12pm') { groupHTML += `<th colspan="8" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM PENDING</th>`; }
+        else if (filterVal === 'pending_3pm') { groupHTML += `<th colspan="5" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM PENDING</th>`; }
+        else if (filterVal === 'pending_eod') { groupHTML += `<th colspan="2" class="group-header" style="background: #e2e8f0; color: #334155;">EOD PENDING</th>`; }
+        else if (filterVal === 'pending_tue') { groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE PENDING</th>`; }
 
         document.getElementById('groupHead').innerHTML = groupHTML;
         document.getElementById('masterHead').innerHTML = activeIndices.map(i => `<th>${headers[i]}</th>`).join('');
@@ -439,15 +504,13 @@
             const storeName = storeNameMap[storeCode] || '';
             const label = filterVal !== 'all' ? `${storeCode} (${count})` : storeCode;
             const nameHTML = storeName ? `<br><span class="store-name">${storeName}</span>` : '';
-            const badgeHTML = mobile 
+            const badgeHTML = mobile
                 ? `<a href="tel:${mobile}" class="badge badge-id" style="text-decoration:none; color:inherit;">${label}${nameHTML}</a>`
                 : `<span class="badge badge-id">${label}${nameHTML}</span>`;
             return `<tr><td>${badgeHTML}</td>${r.slice(1).map(c => `<td><span class="${getCls(c)}">${c}</span></td>`).join('')}</tr>`;
         }).join('');
 
-        document.getElementById('exportTime').innerText = `Viewing: ${targetDateObj.toLocaleDateString()}`;
-        const btn = document.getElementById('exportBtn');
-        btn.disabled = false; btn.innerText = "EXPORT REPORT"; btn.style.opacity = "1";
+        document.getElementById('exportTime').innerText = `Viewing: ${targetDateObj.toLocaleDateString()} (Last Synced: ${new Date().toLocaleTimeString()})`;
     }
 
     function getCls(c) {
@@ -459,35 +522,169 @@
     function exportLandscapeReport() {
         const area = document.getElementById('capture-area');
         const btn = document.getElementById('exportBtn');
-        const sticky = document.querySelectorAll('td:first-child, th');
-        
-        // Temporarily remove sticky positioning
-        const old = []; 
-        sticky.forEach((el, i) => { 
-            old[i] = el.style.position; 
-            el.style.position = 'static'; 
-        });
-        
-        btn.innerText = "SAVING..."; 
+        const sticky = document.querySelectorAll('#capture-area td:first-child, #capture-area th');
+
+        const old = [];
+        sticky.forEach((el, i) => { old[i] = el.style.position; el.style.position = 'static'; });
+        btn.innerText = "SAVING...";
         btn.disabled = true;
-        
+
         html2canvas(area, { scale: 2.5, useCORS: true }).then(canvas => {
-            const link = document.createElement('a'); 
+            const link = document.createElement('a');
             link.download = `Report_${new Date().toLocaleDateString()}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
-            
             sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
-            btn.innerText = "EXPORT REPORT"; 
+            btn.innerText = "EXPORT REPORT";
             btn.disabled = false;
         });
     }
 
+    // --- 15-DAY PERFORMANCE RENDERING --- //
+    async function loadPerformance() {
+        const tbody = document.getElementById('perfBody');
+        const exportBtn = document.getElementById('exportPerfBtn');
+        const refreshBtn = document.getElementById('refreshPerfBtn');
+        
+        exportBtn.disabled = true; refreshBtn.disabled = true;
+        refreshBtn.innerText = "⏳ Fetching...";
+        exportBtn.innerText = "⏳ LOADING...";
+
+        // Check Frontend Cache FIRST
+        if (appCache.perf) {
+            renderPerformanceTable(appCache.perf.dates, appCache.perf.grid);
+            resetPerfButtons(refreshBtn, exportBtn);
+            return; // EXIT EARLY
+        }
+
+        tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding: 20px;">Fetching 15-day records...</td></tr>';
+
+        try {
+            const res = await fetch(scriptURL + "?view=leaderboard");
+            const payload = await res.json();
+
+            if (payload.error) {
+                alert("❌ " + payload.error);
+                resetPerfButtons(refreshBtn, exportBtn);
+                return;
+            }
+
+            // Save to Cache
+            appCache.perf = payload;
+            renderPerformanceTable(payload.dates, payload.grid);
+        } catch(e) {
+            tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding: 20px;">Connection Error.</td></tr>';
+        }
+        resetPerfButtons(refreshBtn, exportBtn);
+    }
+
+    function resetPerfButtons(refBtn, expBtn) {
+        refBtn.disabled = false; refBtn.innerText = "🔄 REFRESH DATA";
+        expBtn.disabled = false; expBtn.innerText = "EXPORT MATRIX";
+    }
+
+    function renderPerformanceTable(dates, grid) {
+        const allStores = Array.from(document.getElementById('storeDropdown').options).map(opt => opt.value).filter(val => val !== "");
+
+        let headHTML = `<th>Store</th>`;
+        dates.forEach(dStr => {
+            const dObj = new Date(dStr.split('-')[0], dStr.split('-')[1]-1, dStr.split('-')[2]);
+            const shortDate = dObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+            const dayName = dObj.toLocaleDateString('en-GB', { weekday: 'short' });
+            const isTue = dObj.getDay() === 2;
+            headHTML += `<th style="${isTue ? 'background:#fee2e2;' : ''}">${shortDate}<br><span style="font-size:9px; font-weight:400;">${dayName}</span></th>`;
+        });
+        headHTML += `<th style="background:#e0f2fe; color:#0369a1; border-left: 2px solid #bae6fd;">Total C / P</th>`;
+        document.getElementById('perfHead').innerHTML = headHTML;
+
+        let storeRows = [];
+        allStores.forEach(store => {
+            let totC = 0, totP = 0;
+            let cellsHTML = '';
+
+            dates.forEach(dStr => {
+                const dObj = new Date(dStr.split('-')[0], dStr.split('-')[1]-1, dStr.split('-')[2]);
+                const isTue = dObj.getDay() === 2;
+                const expectedCols = isTue ? 26 : 23;
+
+                let cellData = grid[store] && grid[store][dStr] ? grid[store][dStr] : { c: 0, p: expectedCols };
+                totC += cellData.c;
+                totP += cellData.p;
+
+                let bgClass = '';
+                if (cellData.p === 0 && cellData.c > 0) bgClass = 'bg-done';
+                else if (cellData.c === 0) bgClass = 'bg-pending';
+
+                cellsHTML += `<td class="${bgClass}">
+                    <span style="color: var(--success); font-weight: 800; font-size:13px;">${cellData.c}</span>
+                    <span style="color: #cbd5e1; margin:0 4px;">|</span>
+                    <span style="color: var(--danger); font-weight: 800; font-size:13px;">${cellData.p}</span>
+                </td>`;
+            });
+
+            const storeName = storeNameMap[store] || '';
+            const nameHTML = storeName ? `<br><span class="store-name">${storeName}</span>` : '';
+            const storeCell = `<td style="text-align:left;">
+                <span class="badge badge-id">${store}${nameHTML}</span>
+            </td>`;
+
+            const totalCell = `<td style="background:#f0f9ff; border-left: 2px solid #bae6fd;">
+                <span style="color: #0369a1; font-weight: 900; font-size:14px;">${totC}</span>
+                <span style="color: #94a3b8; margin:0 4px;">/</span>
+                <span style="color: #be123c; font-weight: 900; font-size:14px;">${totP}</span>
+            </td>`;
+
+            storeRows.push({
+                store: store, totC: totC,
+                html: `<tr>${storeCell}${cellsHTML}${totalCell}</tr>`
+            });
+        });
+
+        // Sort Leaderboard by Most Completed
+        storeRows.sort((a, b) => b.totC - a.totC);
+
+        document.getElementById('perfBody').innerHTML = storeRows.map(r => r.html).join('');
+        document.getElementById('perfExportTime').innerText = `Matrix Generated at: ${new Date().toLocaleString()}`;
+    }
+
+    function exportPerformanceReport() {
+        const area = document.getElementById('perf-capture-area');
+        const btn = document.getElementById('exportPerfBtn');
+        const sticky = document.querySelectorAll('#perf-capture-area td:first-child, #perf-capture-area th');
+
+        const old = [];
+        sticky.forEach((el, i) => { old[i] = el.style.position; el.style.position = 'static'; });
+        btn.innerText = "SAVING MATRIX...";
+        btn.disabled = true;
+
+        html2canvas(area, { scale: 2.5, useCORS: true }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `Performance_Matrix_${new Date().toLocaleDateString()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
+            btn.innerText = "EXPORT MATRIX";
+            btn.disabled = false;
+        });
+    }
+
+    // FORM SUBMISSION
     document.getElementById('storeForm').addEventListener('submit', e => {
         e.preventDefault();
-        const btn = document.getElementById('submitBtn'); btn.innerText = "Submitting..."; btn.disabled = true;
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Submitting...";
+        btn.disabled = true;
         fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
-            .then(() => { alert("Success!"); e.target.reset(); btn.innerText = "SUBMIT ACTIVITIES"; btn.disabled = false; })
+            .then(() => { 
+                alert("Success!"); 
+                e.target.reset(); 
+                btn.innerText = "SUBMIT ACTIVITIES"; 
+                btn.disabled = false; 
+                
+                // Clear the cache so they see their own update immediately
+                appCache.today = null;
+                appCache.perf = null;
+            })
             .catch(() => { alert("Error!"); btn.disabled = false; });
     });
 </script>
