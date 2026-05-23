@@ -50,7 +50,6 @@
         a.badge-id, a.badge { text-decoration: none; color: inherit; }
         .store-name { display: inline; font-size: 9px; font-weight: 400; letter-spacing: 0.3px; color: #64748b; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
         
-        /* Performance Table Specific Sticky Styles */
         .perf-table th { position: sticky; top: 0; z-index: 9; background: #f8fafc; padding: 12px 10px; text-align: center; font-size: 13px; }
         .perf-table th:first-child { position: sticky; left: 0; top: 0; z-index: 11; background: white; border-right: 3px solid #e2e8f0; }
         .perf-table td { padding: 10px; text-align: center; }
@@ -224,42 +223,14 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzFNrq-HvNdbV20Y-2tJQ11NNSHwXmFxfHfDWV9CwSeeHwg58PfmFam40jaJKEuacy8wg/exec'; // 🔗 REPLACE WITH YOUR DEPLOYMENT URL
-    let globalAdminPin = ""; 
-    let isAdminAuthorized = false; 
-    let currentGlobalData = null;
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzFNrq-HvNdbV20Y-2tJQ11NNSHwXmFxfHfDWV9CwSeeHwg58PfmFam40jaJKEuacy8wg/exec'; // 🔗 REPLACE WITH YOUR URL
+    let globalAdminPin = ""; let isAdminAuthorized = false; let currentGlobalData = null;
 
-    // --- FRONTEND CACHE MEMORY --- //
-    const appCache = {
-        today: null,
-        perf: null,
-        admin: {} 
-    };
-
-    const storeMobileMap = {
-        "TK5T": "6290823675", "TM4T": "8013694226", "TM3J": "9830700743", "TM6O": "9641498016",
-        "TM6N": "9399021432", "TM4Z": "9091909166", "TM6M": "9576081621", "TM5C": "9123849664",
-        "TN1C": "8584084421", "TN1B": "7003264912", "T3GC": "9614726660", "TM8T": "8918894749",
-        "T9T7": "8240090853", "TBAE": "6289125596", "TN1T": "9836082600", "T9W3": "8981316403",
-        "T9T3": "9800564852", "T9H8": "6291857226", "T9V5": "8777735431", "U949": "9163971138",
-        "U1WR": "8100856476", "U2JH": "8910006751", "U286": "8100154905", "U1WP": "9330906416",
-        "2587": "9432158182", "FRVE": "8777741774", "U1L2": "9088456889", "U14V": "6291350483",
-        "3035": "9330905971", "3087": "6291803170", "F1ZP": "9903479874", "2314": "9330315100",
-        "U1OW": "8638312600", "TNI6": "7278792130", "TKM7": "7044093676", "U086": "9330314776"
-    };
-
-    const storeNameMap = {
-        "TK5T": "Gulshan Colony", "TM4T": "Shalimar Rd", "TM3J": "Vivekananda Park",
-        "TM6O": "Hridaypur", "TM6N": "Salt Lake", "TM4Z": "Shukhobri", "TM6M": "Mullen Stree",
-        "TM5C": "Bonhoghly", "TN1C": "Thakurpukur", "TN1B": "Lake Mall", "T3GC": "Sealdah",
-        "TM8T": "Urbana", "T9T7": "Newtown Tecn", "TBAE": "Sarsona", "TN1T": "Taratala",
-        "T9W3": "Cossipore", "T9T3": "Dankuni", "T9H8": "Batanagar", "T9V5": "Bagmari",
-        "U949": "Chinsurah", "U1WR": "Prasantika Apt", "U2JH": "Modern Market", "U286": "Liluah",
-        "U1WP": "Dunlop", "2587": "Bangur Avenue", "FRVE": "Sadar Bazar", "U1L2": "Puratan Bazaar",
-        "U14V": "Sonnet Sonar Apar", "3035": "Budgebudge", "3087": "Netaji Nagar",
-        "F1ZP": "Garden Reach", "2314": "Jodhpur Park", "U1OW": "RN Mukherjee Road",
-        "TNI6": "Megh Bristhi", "TKM7": "Sushma Apt Baguihati", "U086": "New Barrackpur"
-    };
+    // FRONTEND CACHE (Stacks on top of Backend Cache)
+    const appCache = { today: null, perf: null, admin: {} };
+    const allStores = ["TM6N", "TM4T", "TM6M", "T9W3", "T9T3", "T9V5", "T3GC", "TM6O", "T9T7", "TM4Z", "TM3J", "TM5C", "TN1B", "TK5T", "TN1T", "T9H8", "TM8T", "TN1C", "TBAE", "U2JH", "U1WR", "U949", "FRVE", "U286", "U1WP", "2314", "3035", "3087", "F1ZP", "U1L2", "U14V", "TNI6", "U086", "U1OW", "TKM7"];
+    const storeMobileMap = {"TK5T": "6290823675", "TM4T": "8013694226", "TM3J": "9830700743", "TM6O": "9641498016", "TM6N": "9399021432", "TM4Z": "9091909166", "TM6M": "9576081621", "TM5C": "9123849664", "TN1C": "8584084421", "TN1B": "7003264912", "T3GC": "9614726660", "TM8T": "8918894749", "T9T7": "8240090853", "TBAE": "6289125596", "TN1T": "9836082600", "T9W3": "8981316403", "T9T3": "9800564852", "T9H8": "6291857226", "T9V5": "8777735431", "U949": "9163971138", "U1WR": "8100856476", "U2JH": "8910006751", "U286": "8100154905", "U1WP": "9330906416", "2587": "9432158182", "FRVE": "8777741774", "U1L2": "9088456889", "U14V": "6291350483", "3035": "9330905971", "3087": "6291803170", "F1ZP": "9903479874", "2314": "9330315100", "U1OW": "8638312600", "TNI6": "7278792130", "TKM7": "7044093676", "U086": "9330314776"};
+    const storeNameMap = {"TK5T": "Gulshan Colony", "TM4T": "Shalimar Rd", "TM3J": "Vivekananda Park", "TM6O": "Hridaypur", "TM6N": "Salt Lake", "TM4Z": "Shukhobri", "TM6M": "Mullen Stree", "TM5C": "Bonhoghly", "TN1C": "Thakurpukur", "TN1B": "Lake Mall", "T3GC": "Sealdah", "TM8T": "Urbana", "T9T7": "Newtown Tecn", "TBAE": "Sarsona", "TN1T": "Taratala", "T9W3": "Cossipore", "T9T3": "Dankuni", "T9H8": "Batanagar", "T9V5": "Bagmari", "U949": "Chinsurah", "U1WR": "Prasantika Apt", "U2JH": "Modern Market", "U286": "Liluah", "U1WP": "Dunlop", "2587": "Bangur Avenue", "FRVE": "Sadar Bazar", "U1L2": "Puratan Bazaar", "U14V": "Sonnet Sonar Apar", "3035": "Budgebudge", "3087": "Netaji Nagar", "F1ZP": "Garden Reach", "2314": "Jodhpur Park", "U1OW": "RN Mukherjee Road", "TNI6": "Megh Bristhi", "TKM7": "Sushma Apt Baguihati", "U086": "New Barrackpur"};
 
     window.onload = () => {
         const isTuesday = new Date().getDay() === 2;
@@ -277,17 +248,11 @@
     };
 
     function forceRefresh() {
-        // Clear all cached memory
-        appCache.today = null;
-        appCache.perf = null;
-        appCache.admin = {};
-        
-        // Reload currently active tab
+        appCache.today = null; appCache.perf = null; appCache.admin = {};
         if (document.getElementById('db').classList.contains('active')) {
-            const isViewAdmin = document.getElementById('adminControls').style.display === 'block';
-            loadDashboard(isViewAdmin ? 'admin' : 'today');
+            loadDashboard(document.getElementById('adminControls').style.display === 'block' ? 'admin' : 'today', true);
         } else if (document.getElementById('perf').classList.contains('active')) {
-            loadPerformance();
+            loadPerformance(true);
         }
     }
 
@@ -296,43 +261,29 @@
             document.getElementById('passwordModal').style.display = 'flex';
             document.getElementById('adminPasscode').value = '';
             document.getElementById('adminPasscode').focus();
-        } else {
-            showTab('db', 'admin');
-        }
+        } else showTab('db', 'admin');
     }
 
     function closePasswordModal() { document.getElementById('passwordModal').style.display = 'none'; }
-
     function submitPassword() {
         const passcode = document.getElementById('adminPasscode').value;
-        if (passcode) {
-            globalAdminPin = passcode;
-            isAdminAuthorized = true;
-            closePasswordModal();
-            showTab('db', 'admin');
-        }
+        if (passcode) { globalAdminPin = passcode; isAdminAuthorized = true; closePasswordModal(); showTab('db', 'admin'); }
     }
-
-    document.getElementById('adminPasscode').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') submitPassword();
-    });
+    document.getElementById('adminPasscode').addEventListener('keypress', (e) => { if (e.key === 'Enter') submitPassword(); });
 
     function showTab(id, viewMode = 'today') {
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        
         if (id === 'form') document.getElementById('btn-form').classList.add('active');
         if (id === 'db' && viewMode === 'today') document.getElementById('btn-today').classList.add('active');
         if (id === 'db' && viewMode === 'admin') document.getElementById('btn-admin').classList.add('active');
         if (id === 'perf') document.getElementById('btn-perf').classList.add('active');
-        
         if (id === 'db') loadDashboard(viewMode);
         if (id === 'perf') loadPerformance();
     }
 
-    // --- DASHBOARD RENDERING --- //
-    async function loadDashboard(viewMode) {
+    // --- DASHBOARD RENDERING (Consumes Pre-Merged Backend Data) ---
+    async function loadDashboard(viewMode, bypassCache = false) {
         const tbody = document.getElementById('masterBody');
         const adminControls = document.getElementById('adminControls');
         const exportBtn = document.getElementById('exportBtn');
@@ -340,10 +291,9 @@
         
         document.getElementById('statusFilter').value = 'all';
         exportBtn.disabled = true; refreshBtn.disabled = true;
-        refreshBtn.innerText = "⏳ Fetching...";
-        exportBtn.innerText = "⏳ LOADING...";
+        refreshBtn.innerText = "⏳ Fetching..."; exportBtn.innerText = "⏳ LOADING...";
 
-        let fetchURL = scriptURL + "?view=" + viewMode;
+        let fetchURL = scriptURL + "?view=" + viewMode + (bypassCache ? "&refresh=true" : "");
         let targetDateObj = new Date();
         let selectedStr = "";
 
@@ -352,56 +302,33 @@
             selectedStr = document.getElementById('historyDateSelect').value;
             fetchURL += `&pin=${encodeURIComponent(globalAdminPin)}&date=${selectedStr}`;
             const [y, m, d] = selectedStr.split('-'); targetDateObj = new Date(y, m - 1, d);
-            
-            // Check Frontend Cache FIRST
-            if (appCache.admin[selectedStr]) {
+            if (!bypassCache && appCache.admin[selectedStr]) {
                 currentGlobalData = appCache.admin[selectedStr];
-                renderTable(targetDateObj);
-                resetButtons(refreshBtn, exportBtn);
-                return; // EXIT EARLY - INSTANT LOAD
+                renderTable(targetDateObj); resetButtons(refreshBtn, exportBtn); return;
             }
         } else {
             adminControls.style.display = 'none';
-            // Check Frontend Cache FIRST
-            if (appCache.today) {
+            if (!bypassCache && appCache.today) {
                 currentGlobalData = appCache.today;
-                renderTable(targetDateObj);
-                resetButtons(refreshBtn, exportBtn);
-                return; // EXIT EARLY - INSTANT LOAD
+                renderTable(targetDateObj); resetButtons(refreshBtn, exportBtn); return;
             }
         }
 
-        tbody.innerHTML = '<tr><td colspan="25" style="text-align:center; padding: 20px;">Fetching logs from Google...</td></tr>';
-
+        tbody.innerHTML = '<tr><td colspan="25" style="text-align:center; padding: 20px;">Contacting Google Servers...</td></tr>';
         try {
             const res = await fetch(fetchURL);
             currentGlobalData = await res.json();
-            
             if (currentGlobalData.error) {
-                isAdminAuthorized = false;
-                alert("❌ " + currentGlobalData.error);
-                resetButtons(refreshBtn, exportBtn);
-                return;
+                isAdminAuthorized = false; alert("❌ " + currentGlobalData.error); resetButtons(refreshBtn, exportBtn); return;
             }
-
-            // SAVE TO CACHE FOR NEXT TIME
-            if (viewMode === 'admin') {
-                appCache.admin[selectedStr] = currentGlobalData;
-            } else {
-                appCache.today = currentGlobalData;
-            }
-
+            if (viewMode === 'admin') appCache.admin[selectedStr] = currentGlobalData;
+            else appCache.today = currentGlobalData;
             renderTable(targetDateObj);
-        } catch(e) {
-            tbody.innerHTML = '<tr><td colspan="25" style="text-align:center; padding: 20px;">Connection Error.</td></tr>';
-        }
+        } catch(e) { tbody.innerHTML = '<tr><td colspan="25" style="text-align:center; padding: 20px;">Connection Error.</td></tr>'; }
         resetButtons(refreshBtn, exportBtn);
     }
 
-    function resetButtons(refBtn, expBtn) {
-        refBtn.disabled = false; refBtn.innerText = "🔄 REFRESH DATA";
-        expBtn.disabled = false; expBtn.innerText = "EXPORT REPORT";
-    }
+    function resetButtons(refBtn, expBtn) { refBtn.disabled = false; refBtn.innerText = "🔄 REFRESH DATA"; expBtn.disabled = false; expBtn.innerText = "EXPORT REPORT"; }
 
     function applyUIfilter() {
         if(!currentGlobalData) return;
@@ -414,31 +341,10 @@
     }
 
     function renderTable(targetDateObj) {
-        const headers = currentGlobalData[0];
-        const rows = currentGlobalData.slice(1);
-        const isTargetTuesday = targetDateObj.getDay() === 2;
+        const headers = currentGlobalData.headers;
+        const mergedMap = currentGlobalData.merged;
         const filterVal = document.getElementById('statusFilter').value;
-        const allStores = Array.from(document.getElementById('storeDropdown').options).map(opt => opt.value).filter(val => val !== "");
-
-        let storeDataMap = {};
-        allStores.forEach(store => {
-            storeDataMap[store] = new Array(headers.length).fill("❌ Pending");
-            storeDataMap[store][1] = store;
-        });
-
-        rows.forEach(row => {
-            const store = row[1];
-            if (!store) return;
-            if (!storeDataMap[store]) {
-                storeDataMap[store] = new Array(headers.length).fill("❌ Pending");
-                storeDataMap[store][1] = store;
-            }
-            for (let i = 2; i < headers.length; i++) {
-                if (row[i] !== undefined && row[i] !== "" && String(row[i]).trim() !== "") {
-                    storeDataMap[store][i] = row[i];
-                }
-            }
-        });
+        const isTargetTuesday = targetDateObj.getDay() === 2;
 
         const idxStore = [1];
         const idx10am = [2, 3, 4, 5, 17, 18, 19, 6];   
@@ -461,24 +367,15 @@
         const isP = (val) => String(val).includes('❌ Pending');
 
         let finalRows = allStores.map(store => {
-            const row = storeDataMap[store];
+            const row = mergedMap[store];
             return activeIndices.map(i => {
                 let val = row[i];
-                let displayVal = (val === undefined || val === null || String(val).trim() === '' || val === "❌ Pending") ? "❌ Pending" : val;
-                if (String(headers[i]).includes("(Tue)")) {
-                    displayVal = isTargetTuesday ? displayVal : "—";
-                }
-                return displayVal;
+                return (val === undefined || val === null || String(val).trim() === '') ? "❌ Pending" : val;
             });
         });
 
-        if (filterVal === 'all') { /* show all */ }
-        else if (filterVal === 'max_pending') {
-            finalRows.sort((a, b) => b.filter(isP).length - a.filter(isP).length);
-        } else {
-            finalRows = finalRows.filter(row => row.slice(1).some(isP))
-                                 .sort((a, b) => b.filter(isP).length - a.filter(isP).length);
-        }
+        if (filterVal === 'max_pending') finalRows.sort((a, b) => b.filter(isP).length - a.filter(isP).length);
+        else if (filterVal !== 'all') finalRows = finalRows.filter(row => row.slice(1).some(isP)).sort((a, b) => b.filter(isP).length - a.filter(isP).length);
 
         let groupHTML = `<th class="group-header" style="background: white;"></th>`;
         if (['all', 'max_pending'].includes(filterVal)) {
@@ -486,9 +383,7 @@
             groupHTML += `<th colspan="8" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM</th>`;
             groupHTML += `<th colspan="5" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM</th>`;
             groupHTML += `<th colspan="2" class="group-header" style="background: #e2e8f0; color: #334155;">EOD</th>`;
-            if (isTargetTuesday) {
-                groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE</th>`;
-            }
+            if (isTargetTuesday) groupHTML += `<th colspan="3" class="group-header" style="background: #fee2e2; color: #991b1b;">TUE</th>`;
         } else if (filterVal === 'pending_10am') { groupHTML += `<th colspan="8" class="group-header" style="background: #e0f2fe; color: #0369a1;">10 AM PENDING</th>`; }
         else if (filterVal === 'pending_12pm') { groupHTML += `<th colspan="8" class="group-header" style="background: #fef08a; color: #854d0e;">12 PM PENDING</th>`; }
         else if (filterVal === 'pending_3pm') { groupHTML += `<th colspan="5" class="group-header" style="background: #ffedd5; color: #c2410c;">3-6 PM PENDING</th>`; }
@@ -504,187 +399,106 @@
             const storeName = storeNameMap[storeCode] || '';
             const label = filterVal !== 'all' ? `${storeCode} (${count})` : storeCode;
             const nameHTML = storeName ? `<br><span class="store-name">${storeName}</span>` : '';
-            const badgeHTML = mobile
-                ? `<a href="tel:${mobile}" class="badge badge-id" style="text-decoration:none; color:inherit;">${label}${nameHTML}</a>`
-                : `<span class="badge badge-id">${label}${nameHTML}</span>`;
+            const badgeHTML = mobile ? `<a href="tel:${mobile}" class="badge badge-id" style="text-decoration:none; color:inherit;">${label}${nameHTML}</a>` : `<span class="badge badge-id">${label}${nameHTML}</span>`;
             return `<tr><td>${badgeHTML}</td>${r.slice(1).map(c => `<td><span class="${getCls(c)}">${c}</span></td>`).join('')}</tr>`;
         }).join('');
 
-        document.getElementById('exportTime').innerText = `Viewing: ${targetDateObj.toLocaleDateString()} (Last Synced: ${new Date().toLocaleTimeString()})`;
+        document.getElementById('exportTime').innerText = `Viewing: ${targetDateObj.toLocaleDateString()} (Synced: ${new Date().toLocaleTimeString()})`;
     }
 
     function getCls(c) {
+        if(String(c) === '—') return 'badge badge-id';
         if(String(c).includes('Done')) return 'badge bg-done';
         if(String(c).includes('Pending')) return 'badge bg-pending';
         return 'badge badge-id';
     }
 
-    function exportLandscapeReport() {
-        const area = document.getElementById('capture-area');
-        const btn = document.getElementById('exportBtn');
-        const sticky = document.querySelectorAll('#capture-area td:first-child, #capture-area th');
-
-        const old = [];
-        sticky.forEach((el, i) => { old[i] = el.style.position; el.style.position = 'static'; });
-        btn.innerText = "SAVING...";
-        btn.disabled = true;
-
-        html2canvas(area, { scale: 2.5, useCORS: true }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = `Report_${new Date().toLocaleDateString()}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
-            btn.innerText = "EXPORT REPORT";
-            btn.disabled = false;
-        });
-    }
-
-    // --- 15-DAY PERFORMANCE RENDERING --- //
-    async function loadPerformance() {
+    // --- 15-DAY PERFORMANCE RENDERING (Consumes Pre-Calculated Grid) ---
+    async function loadPerformance(bypassCache = false) {
         const tbody = document.getElementById('perfBody');
         const exportBtn = document.getElementById('exportPerfBtn');
         const refreshBtn = document.getElementById('refreshPerfBtn');
         
         exportBtn.disabled = true; refreshBtn.disabled = true;
-        refreshBtn.innerText = "⏳ Fetching...";
-        exportBtn.innerText = "⏳ LOADING...";
+        refreshBtn.innerText = "⏳ Fetching..."; exportBtn.innerText = "⏳ LOADING...";
 
-        // Check Frontend Cache FIRST
-        if (appCache.perf) {
+        let fetchURL = scriptURL + "?view=leaderboard" + (bypassCache ? "&refresh=true" : "");
+
+        if (!bypassCache && appCache.perf) {
             renderPerformanceTable(appCache.perf.dates, appCache.perf.grid);
-            resetPerfButtons(refreshBtn, exportBtn);
-            return; // EXIT EARLY
+            resetPerfButtons(refreshBtn, exportBtn); return;
         }
 
-        tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding: 20px;">Fetching 15-day records...</td></tr>';
-
+        tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding: 20px;">Contacting Google Servers...</td></tr>';
         try {
-            const res = await fetch(scriptURL + "?view=leaderboard");
+            const res = await fetch(fetchURL);
             const payload = await res.json();
-
-            if (payload.error) {
-                alert("❌ " + payload.error);
-                resetPerfButtons(refreshBtn, exportBtn);
-                return;
-            }
-
-            // Save to Cache
+            if (payload.error) { alert("❌ " + payload.error); resetPerfButtons(refreshBtn, exportBtn); return; }
             appCache.perf = payload;
             renderPerformanceTable(payload.dates, payload.grid);
-        } catch(e) {
-            tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding: 20px;">Connection Error.</td></tr>';
-        }
+        } catch(e) { tbody.innerHTML = '<tr><td colspan="17" style="text-align:center; padding: 20px;">Connection Error.</td></tr>'; }
         resetPerfButtons(refreshBtn, exportBtn);
     }
 
-    function resetPerfButtons(refBtn, expBtn) {
-        refBtn.disabled = false; refBtn.innerText = "🔄 REFRESH DATA";
-        expBtn.disabled = false; expBtn.innerText = "EXPORT MATRIX";
-    }
+    function resetPerfButtons(refBtn, expBtn) { refBtn.disabled = false; refBtn.innerText = "🔄 REFRESH DATA"; expBtn.disabled = false; expBtn.innerText = "EXPORT MATRIX"; }
 
     function renderPerformanceTable(dates, grid) {
-        const allStores = Array.from(document.getElementById('storeDropdown').options).map(opt => opt.value).filter(val => val !== "");
-
         let headHTML = `<th>Store</th>`;
         dates.forEach(dStr => {
             const dObj = new Date(dStr.split('-')[0], dStr.split('-')[1]-1, dStr.split('-')[2]);
-            const shortDate = dObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-            const dayName = dObj.toLocaleDateString('en-GB', { weekday: 'short' });
             const isTue = dObj.getDay() === 2;
-            headHTML += `<th style="${isTue ? 'background:#fee2e2;' : ''}">${shortDate}<br><span style="font-size:9px; font-weight:400;">${dayName}</span></th>`;
+            headHTML += `<th style="${isTue ? 'background:#fee2e2;' : ''}">${dObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}<br><span style="font-size:9px; font-weight:400;">${dObj.toLocaleDateString('en-GB', { weekday: 'short' })}</span></th>`;
         });
         headHTML += `<th style="background:#e0f2fe; color:#0369a1; border-left: 2px solid #bae6fd;">Total C / P</th>`;
         document.getElementById('perfHead').innerHTML = headHTML;
 
         let storeRows = [];
         allStores.forEach(store => {
-            let totC = 0, totP = 0;
-            let cellsHTML = '';
-
+            let totC = 0, totP = 0, cellsHTML = '';
             dates.forEach(dStr => {
-                const dObj = new Date(dStr.split('-')[0], dStr.split('-')[1]-1, dStr.split('-')[2]);
-                const isTue = dObj.getDay() === 2;
-                const expectedCols = isTue ? 26 : 23;
-
-                let cellData = grid[store] && grid[store][dStr] ? grid[store][dStr] : { c: 0, p: expectedCols };
-                totC += cellData.c;
-                totP += cellData.p;
-
-                let bgClass = '';
-                if (cellData.p === 0 && cellData.c > 0) bgClass = 'bg-done';
-                else if (cellData.c === 0) bgClass = 'bg-pending';
-
-                cellsHTML += `<td class="${bgClass}">
-                    <span style="color: var(--success); font-weight: 800; font-size:13px;">${cellData.c}</span>
-                    <span style="color: #cbd5e1; margin:0 4px;">|</span>
-                    <span style="color: var(--danger); font-weight: 800; font-size:13px;">${cellData.p}</span>
-                </td>`;
+                let cellData = grid[store] && grid[store][dStr] ? grid[store][dStr] : { c: 0, p: (new Date(dStr).getDay() === 2 ? 26 : 23) };
+                totC += cellData.c; totP += cellData.p;
+                let bgClass = (cellData.p === 0 && cellData.c > 0) ? 'bg-done' : (cellData.c === 0 ? 'bg-pending' : '');
+                cellsHTML += `<td class="${bgClass}"><span style="color: var(--success); font-weight: 800; font-size:13px;">${cellData.c}</span> <span style="color: #cbd5e1; margin:0 4px;">|</span> <span style="color: var(--danger); font-weight: 800; font-size:13px;">${cellData.p}</span></td>`;
             });
 
             const storeName = storeNameMap[store] || '';
             const nameHTML = storeName ? `<br><span class="store-name">${storeName}</span>` : '';
-            const storeCell = `<td style="text-align:left;">
-                <span class="badge badge-id">${store}${nameHTML}</span>
-            </td>`;
-
-            const totalCell = `<td style="background:#f0f9ff; border-left: 2px solid #bae6fd;">
-                <span style="color: #0369a1; font-weight: 900; font-size:14px;">${totC}</span>
-                <span style="color: #94a3b8; margin:0 4px;">/</span>
-                <span style="color: #be123c; font-weight: 900; font-size:14px;">${totP}</span>
-            </td>`;
-
             storeRows.push({
-                store: store, totC: totC,
-                html: `<tr>${storeCell}${cellsHTML}${totalCell}</tr>`
+                totC: totC,
+                html: `<tr><td style="text-align:left;"><span class="badge badge-id">${store}${nameHTML}</span></td>${cellsHTML}<td style="background:#f0f9ff; border-left: 2px solid #bae6fd;"><span style="color: #0369a1; font-weight: 900; font-size:14px;">${totC}</span> <span style="color: #94a3b8; margin:0 4px;">/</span> <span style="color: #be123c; font-weight: 900; font-size:14px;">${totP}</span></td></tr>`
             });
         });
 
-        // Sort Leaderboard by Most Completed
         storeRows.sort((a, b) => b.totC - a.totC);
-
         document.getElementById('perfBody').innerHTML = storeRows.map(r => r.html).join('');
         document.getElementById('perfExportTime').innerText = `Matrix Generated at: ${new Date().toLocaleString()}`;
     }
 
-    function exportPerformanceReport() {
-        const area = document.getElementById('perf-capture-area');
-        const btn = document.getElementById('exportPerfBtn');
-        const sticky = document.querySelectorAll('#perf-capture-area td:first-child, #perf-capture-area th');
+    function exportLandscapeReport() { captureElement('capture-area', 'exportBtn', `Report_${new Date().toLocaleDateString()}.png`); }
+    function exportPerformanceReport() { captureElement('perf-capture-area', 'exportPerfBtn', `Performance_Matrix_${new Date().toLocaleDateString()}.png`); }
 
+    function captureElement(areaId, btnId, filename) {
+        const area = document.getElementById(areaId);
+        const btn = document.getElementById(btnId);
+        const sticky = document.querySelectorAll(`#${areaId} td:first-child, #${areaId} th`);
         const old = [];
         sticky.forEach((el, i) => { old[i] = el.style.position; el.style.position = 'static'; });
-        btn.innerText = "SAVING MATRIX...";
-        btn.disabled = true;
-
+        btn.innerText = "SAVING..."; btn.disabled = true;
         html2canvas(area, { scale: 2.5, useCORS: true }).then(canvas => {
             const link = document.createElement('a');
-            link.download = `Performance_Matrix_${new Date().toLocaleDateString()}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
+            link.download = filename; link.href = canvas.toDataURL('image/png'); link.click();
             sticky.forEach((el, i) => { el.style.position = old[i] || ''; });
-            btn.innerText = "EXPORT MATRIX";
-            btn.disabled = false;
+            btn.innerText = "EXPORT"; btn.disabled = false;
         });
     }
 
-    // FORM SUBMISSION
     document.getElementById('storeForm').addEventListener('submit', e => {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
-        btn.innerText = "Submitting...";
-        btn.disabled = true;
+        btn.innerText = "Submitting..."; btn.disabled = true;
         fetch(scriptURL, { method: 'POST', body: new FormData(e.target)})
-            .then(() => { 
-                alert("Success!"); 
-                e.target.reset(); 
-                btn.innerText = "SUBMIT ACTIVITIES"; 
-                btn.disabled = false; 
-                
-                // Clear the cache so they see their own update immediately
-                appCache.today = null;
-                appCache.perf = null;
-            })
+            .then(() => { alert("Success!"); e.target.reset(); btn.innerText = "SUBMIT ACTIVITIES"; btn.disabled = false; appCache.today = null; appCache.perf = null; })
             .catch(() => { alert("Error!"); btn.disabled = false; });
     });
 </script>
