@@ -63,6 +63,7 @@
         .modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-cancel { background: #e2e8f0; color: #475569; }
         .btn-submit { background: var(--primary); color: white; }
+        .csv-btn { margin-top: 10px; padding: 14px; background: #0369a1; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; }
     </style>
 </head>
 <body>
@@ -167,6 +168,8 @@
     <div id="adminControls">
         <label style="margin-top:0; display:inline-block; font-size: 1rem; color: var(--danger);"><strong>Select Historical Date:</strong></label>
         <select id="historyDateSelect" onchange="loadDashboard('admin')"></select>
+        <!-- NEW 30‑day CSV download button (only visible in admin mode) -->
+        <button id="download30DaysBtn" class="csv-btn" onclick="download30DayCSV()">📥 DOWNLOAD LAST 30 DAYS CSV</button>
     </div>
 
     <div class="db-controls">
@@ -501,6 +504,122 @@
             .then(() => { alert("Success!"); e.target.reset(); btn.innerText = "SUBMIT ACTIVITIES"; btn.disabled = false; appCache.today = null; appCache.perf = null; })
             .catch(() => { alert("Error!"); btn.disabled = false; });
     });
+
+    // ------------------------------------------------------------
+    // NEW: 30‑DAY CSV DOWNLOAD FUNCTION
+    // ------------------------------------------------------------
+    async function download30DayCSV() {
+        if (!isAdminAuthorized) {
+            alert("Please unlock admin mode first.");
+            return;
+        }
+
+        const btn = document.getElementById('download30DaysBtn');
+        const originalText = btn.innerText;
+        btn.disabled = true;
+        btn.innerText = "⏳ FETCHING 30 DAYS... (0%)";
+        const TOTAL_DAYS = 30;
+
+        // Build an array of date strings (YYYY-MM-DD) for the last 30 days (excluding today)
+        const dateList = [];
+        for (let i = 1; i <= TOTAL_DAYS; i++) {
+            let d = new Date();
+            d.setDate(d.getDate() - i);
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            dateList.push(`${y}-${m}-${day}`);
+        }
+
+        // We'll fetch one by one and accumulate CSV rows.
+        let csvRows = [];
+        let headers = null; // will grab from first successful response
+
+        for (let idx = 0; idx < dateList.length; idx++) {
+            const dateStr = dateList[idx];
+            const percent = Math.round(((idx + 1) / dateList.length) * 100);
+            btn.innerText = `⏳ FETCHING... (${percent}%)`;
+
+            try {
+                const url = `${scriptURL}?view=admin&pin=${encodeURIComponent(globalAdminPin)}&date=${dateStr}`;
+                const res = await fetch(url);
+                const json = await res.json();
+                if (json.error) {
+                    console.warn(`Skipping ${dateStr}: ${json.error}`);
+                    continue; // skip days with error (e.g., no data)
+                }
+
+                // On first success, capture the full headers array
+                if (!headers) {
+                    headers = json.headers.slice(); // clone
+                    // Prepend "Date" and "Store" columns
+                    csvRows.push(['Date', 'Store', 'Store Name', ...headers.slice(1)].map(csvEscape).join(','));
+                }
+
+                // For each store, create a row
+                const merged = json.merged || {};
+                allStores.forEach(store => {
+                    const rowData = merged[store];
+                    const values = [];
+                    // For each header index (skip index 0, which is store code)
+                    for (let i = 1; i < headers.length; i++) {
+                        let val = rowData ? rowData[i] : '';
+                        if (val === undefined || val === null || String(val).trim() === '') {
+                            val = 'Pending';
+                        } else {
+                            val = String(val).replace(/❌ Pending/g, 'Pending').trim();
+                        }
+                        values.push(csvEscape(val));
+                    }
+                    const row = [
+                        csvEscape(dateStr),
+                        csvEscape(store),
+                        csvEscape(storeNameMap[store] || ''),
+                        ...values
+                    ].join(',');
+                    csvRows.push(row);
+                });
+
+                // Small delay to avoid hitting rate limits (optional)
+                await new Promise(r => setTimeout(r, 100));
+            } catch (err) {
+                console.warn(`Failed to fetch ${dateStr}:`, err);
+                // continue anyway
+            }
+        }
+
+        if (csvRows.length <= 1) {
+            alert("No data available for the last 30 days.");
+            btn.disabled = false;
+            btn.innerText = originalText;
+            return;
+        }
+
+        // Generate CSV file and trigger download
+        const csvContent = csvRows.join('\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' }); // BOM for Excel
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Dashboard_30Days_${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        btn.innerText = "✅ DOWNLOAD COMPLETE";
+        setTimeout(() => { btn.disabled = false; btn.innerText = originalText; }, 3000);
+    }
+
+    // Helper to escape CSV fields
+    function csvEscape(str) {
+        if (str === null || str === undefined) return '""';
+        str = String(str);
+        if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+            return '"' + str.replace(/"/g, '""') + '"';
+        }
+        return str;
+    }
 </script>
 </body>
 </html>
