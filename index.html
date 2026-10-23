@@ -441,10 +441,10 @@
         }
     }
 
-    // Strips "Doc: XYZ | " from F&V Dump (6) and Non F&V Dump (20) so only the Value in Rs shows on the dashboard
+    // Safely preserves numeric 0 while stripping "Doc: XYZ | " from F&V Dump (6) and Non F&V Dump (20)
     function formatCellDisplay(colIdx, rawVal) {
-        const str = String(rawVal || '').trim();
-        if (!str || str.includes('❌ Pending')) return { text: '❌ Pending', tooltip: '' };
+        const str = (rawVal === undefined || rawVal === null) ? '' : String(rawVal).trim();
+        if (str === '' || str.includes('❌ Pending')) return { text: '❌ Pending', tooltip: '' };
         if (str === '—') return { text: '—', tooltip: '' };
 
         if ((colIdx === 6 || colIdx === 20) && str.includes('|')) {
